@@ -1,0 +1,270 @@
+#
+# Generated Makefile - do not edit!
+#
+# Edit the Makefile in the project folder instead (../Makefile). Each target
+# has a -pre and a -post target defined where you can add customized code.
+#
+# This makefile implements configuration specific macros and targets.
+
+
+# Include project Makefile
+ifeq "${IGNORE_LOCAL}" "TRUE"
+# do not include local makefile. User is passing all local related variables already
+else
+include Makefile
+# Include makefile containing local settings
+ifeq "$(wildcard nbproject/Makefile-local-default.mk)" "nbproject/Makefile-local-default.mk"
+include nbproject/Makefile-local-default.mk
+endif
+endif
+
+# Environment
+MKDIR=gnumkdir -p
+RM=rm -f 
+MV=mv 
+CP=cp 
+
+# Macros
+CND_CONF=default
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+IMAGE_TYPE=debug
+OUTPUT_SUFFIX=elf
+DEBUGGABLE_SUFFIX=elf
+FINAL_IMAGE=${DISTDIR}/PRJ07_-_CAN2USB.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+else
+IMAGE_TYPE=production
+OUTPUT_SUFFIX=hex
+DEBUGGABLE_SUFFIX=elf
+FINAL_IMAGE=${DISTDIR}/PRJ07_-_CAN2USB.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+endif
+
+ifeq ($(COMPARE_BUILD), true)
+COMPARISON_BUILD=-mafrlcsj
+else
+COMPARISON_BUILD=
+endif
+
+# Object Directory
+OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
+
+# Distribution Directory
+DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
+
+# Source Files Quoted if spaced
+SOURCEFILES_QUOTED_IF_SPACED=usb/usb_device.c usb/usb_descriptors.c usb/usb_device_generic.c main.c mcp2515.c app_led_usb_status.c app_device_vendor_basic.c usb_events.c
+
+# Object Files Quoted if spaced
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/usb/usb_device.p1 ${OBJECTDIR}/usb/usb_descriptors.p1 ${OBJECTDIR}/usb/usb_device_generic.p1 ${OBJECTDIR}/main.p1 ${OBJECTDIR}/mcp2515.p1 ${OBJECTDIR}/app_led_usb_status.p1 ${OBJECTDIR}/app_device_vendor_basic.p1 ${OBJECTDIR}/usb_events.p1
+POSSIBLE_DEPFILES=${OBJECTDIR}/usb/usb_device.p1.d ${OBJECTDIR}/usb/usb_descriptors.p1.d ${OBJECTDIR}/usb/usb_device_generic.p1.d ${OBJECTDIR}/main.p1.d ${OBJECTDIR}/mcp2515.p1.d ${OBJECTDIR}/app_led_usb_status.p1.d ${OBJECTDIR}/app_device_vendor_basic.p1.d ${OBJECTDIR}/usb_events.p1.d
+
+# Object Files
+OBJECTFILES=${OBJECTDIR}/usb/usb_device.p1 ${OBJECTDIR}/usb/usb_descriptors.p1 ${OBJECTDIR}/usb/usb_device_generic.p1 ${OBJECTDIR}/main.p1 ${OBJECTDIR}/mcp2515.p1 ${OBJECTDIR}/app_led_usb_status.p1 ${OBJECTDIR}/app_device_vendor_basic.p1 ${OBJECTDIR}/usb_events.p1
+
+# Source Files
+SOURCEFILES=usb/usb_device.c usb/usb_descriptors.c usb/usb_device_generic.c main.c mcp2515.c app_led_usb_status.c app_device_vendor_basic.c usb_events.c
+
+
+
+CFLAGS=
+ASFLAGS=
+LDLIBSOPTIONS=
+
+############# Tool locations ##########################################
+# If you copy a project from one host to another, the path where the  #
+# compiler is installed may be different.                             #
+# If you open this project with MPLAB X in the new host, this         #
+# makefile will be regenerated and the paths will be corrected.       #
+#######################################################################
+# fixDeps replaces a bunch of sed/cat/printf statements that slow down the build
+FIXDEPS=fixDeps
+
+.build-conf:  ${BUILD_SUBPROJECTS}
+ifneq ($(INFORMATION_MESSAGE), )
+	@echo $(INFORMATION_MESSAGE)
+endif
+	${MAKE}  -f nbproject/Makefile-default.mk ${DISTDIR}/PRJ07_-_CAN2USB.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+
+MP_PROCESSOR_OPTION=18F14K50
+# ------------------------------------------------------------------------------------
+# Rules for buildStep: compile
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+${OBJECTDIR}/usb/usb_device.p1: usb/usb_device.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}/usb" 
+	@${RM} ${OBJECTDIR}/usb/usb_device.p1.d 
+	@${RM} ${OBJECTDIR}/usb/usb_device.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=icd3   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c90 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/usb/usb_device.p1 usb/usb_device.c 
+	@-${MV} ${OBJECTDIR}/usb/usb_device.d ${OBJECTDIR}/usb/usb_device.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/usb/usb_device.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/usb/usb_descriptors.p1: usb/usb_descriptors.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}/usb" 
+	@${RM} ${OBJECTDIR}/usb/usb_descriptors.p1.d 
+	@${RM} ${OBJECTDIR}/usb/usb_descriptors.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=icd3   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c90 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/usb/usb_descriptors.p1 usb/usb_descriptors.c 
+	@-${MV} ${OBJECTDIR}/usb/usb_descriptors.d ${OBJECTDIR}/usb/usb_descriptors.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/usb/usb_descriptors.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/usb/usb_device_generic.p1: usb/usb_device_generic.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}/usb" 
+	@${RM} ${OBJECTDIR}/usb/usb_device_generic.p1.d 
+	@${RM} ${OBJECTDIR}/usb/usb_device_generic.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=icd3   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c90 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/usb/usb_device_generic.p1 usb/usb_device_generic.c 
+	@-${MV} ${OBJECTDIR}/usb/usb_device_generic.d ${OBJECTDIR}/usb/usb_device_generic.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/usb/usb_device_generic.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/main.p1: main.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/main.p1.d 
+	@${RM} ${OBJECTDIR}/main.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=icd3   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c90 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/main.p1 main.c 
+	@-${MV} ${OBJECTDIR}/main.d ${OBJECTDIR}/main.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/main.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/mcp2515.p1: mcp2515.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/mcp2515.p1.d 
+	@${RM} ${OBJECTDIR}/mcp2515.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=icd3   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c90 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/mcp2515.p1 mcp2515.c 
+	@-${MV} ${OBJECTDIR}/mcp2515.d ${OBJECTDIR}/mcp2515.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/mcp2515.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/app_led_usb_status.p1: app_led_usb_status.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/app_led_usb_status.p1.d 
+	@${RM} ${OBJECTDIR}/app_led_usb_status.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=icd3   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c90 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/app_led_usb_status.p1 app_led_usb_status.c 
+	@-${MV} ${OBJECTDIR}/app_led_usb_status.d ${OBJECTDIR}/app_led_usb_status.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/app_led_usb_status.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/app_device_vendor_basic.p1: app_device_vendor_basic.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/app_device_vendor_basic.p1.d 
+	@${RM} ${OBJECTDIR}/app_device_vendor_basic.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=icd3   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c90 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/app_device_vendor_basic.p1 app_device_vendor_basic.c 
+	@-${MV} ${OBJECTDIR}/app_device_vendor_basic.d ${OBJECTDIR}/app_device_vendor_basic.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/app_device_vendor_basic.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/usb_events.p1: usb_events.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/usb_events.p1.d 
+	@${RM} ${OBJECTDIR}/usb_events.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=icd3   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c90 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/usb_events.p1 usb_events.c 
+	@-${MV} ${OBJECTDIR}/usb_events.d ${OBJECTDIR}/usb_events.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/usb_events.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+else
+${OBJECTDIR}/usb/usb_device.p1: usb/usb_device.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}/usb" 
+	@${RM} ${OBJECTDIR}/usb/usb_device.p1.d 
+	@${RM} ${OBJECTDIR}/usb/usb_device.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c90 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/usb/usb_device.p1 usb/usb_device.c 
+	@-${MV} ${OBJECTDIR}/usb/usb_device.d ${OBJECTDIR}/usb/usb_device.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/usb/usb_device.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/usb/usb_descriptors.p1: usb/usb_descriptors.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}/usb" 
+	@${RM} ${OBJECTDIR}/usb/usb_descriptors.p1.d 
+	@${RM} ${OBJECTDIR}/usb/usb_descriptors.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c90 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/usb/usb_descriptors.p1 usb/usb_descriptors.c 
+	@-${MV} ${OBJECTDIR}/usb/usb_descriptors.d ${OBJECTDIR}/usb/usb_descriptors.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/usb/usb_descriptors.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/usb/usb_device_generic.p1: usb/usb_device_generic.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}/usb" 
+	@${RM} ${OBJECTDIR}/usb/usb_device_generic.p1.d 
+	@${RM} ${OBJECTDIR}/usb/usb_device_generic.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c90 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/usb/usb_device_generic.p1 usb/usb_device_generic.c 
+	@-${MV} ${OBJECTDIR}/usb/usb_device_generic.d ${OBJECTDIR}/usb/usb_device_generic.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/usb/usb_device_generic.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/main.p1: main.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/main.p1.d 
+	@${RM} ${OBJECTDIR}/main.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c90 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/main.p1 main.c 
+	@-${MV} ${OBJECTDIR}/main.d ${OBJECTDIR}/main.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/main.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/mcp2515.p1: mcp2515.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/mcp2515.p1.d 
+	@${RM} ${OBJECTDIR}/mcp2515.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c90 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/mcp2515.p1 mcp2515.c 
+	@-${MV} ${OBJECTDIR}/mcp2515.d ${OBJECTDIR}/mcp2515.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/mcp2515.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/app_led_usb_status.p1: app_led_usb_status.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/app_led_usb_status.p1.d 
+	@${RM} ${OBJECTDIR}/app_led_usb_status.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c90 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/app_led_usb_status.p1 app_led_usb_status.c 
+	@-${MV} ${OBJECTDIR}/app_led_usb_status.d ${OBJECTDIR}/app_led_usb_status.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/app_led_usb_status.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/app_device_vendor_basic.p1: app_device_vendor_basic.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/app_device_vendor_basic.p1.d 
+	@${RM} ${OBJECTDIR}/app_device_vendor_basic.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c90 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/app_device_vendor_basic.p1 app_device_vendor_basic.c 
+	@-${MV} ${OBJECTDIR}/app_device_vendor_basic.d ${OBJECTDIR}/app_device_vendor_basic.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/app_device_vendor_basic.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/usb_events.p1: usb_events.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/usb_events.p1.d 
+	@${RM} ${OBJECTDIR}/usb_events.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c90 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/usb_events.p1 usb_events.c 
+	@-${MV} ${OBJECTDIR}/usb_events.d ${OBJECTDIR}/usb_events.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/usb_events.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+endif
+
+# ------------------------------------------------------------------------------------
+# Rules for buildStep: assemble
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+else
+endif
+
+# ------------------------------------------------------------------------------------
+# Rules for buildStep: assembleWithPreprocess
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+else
+endif
+
+# ------------------------------------------------------------------------------------
+# Rules for buildStep: link
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+${DISTDIR}/PRJ07_-_CAN2USB.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}: ${OBJECTFILES}  nbproject/Makefile-${CND_CONF}.mk    
+	@${MKDIR} ${DISTDIR} 
+	${MP_CC} $(MP_EXTRA_LD_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -Wl,-Map=${DISTDIR}/PRJ07_-_CAN2USB.X.${IMAGE_TYPE}.map  -D__DEBUG=1  -mdebugger=icd3  -DXPRJ_default=$(CND_CONF)  -Wl,--defsym=__MPLAB_BUILD=1   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits -std=c90 -gdwarf-3 -mstack=compiled:auto:auto:auto     -mrom=default,-3e00-3fff   $(COMPARISON_BUILD) -Wl,--memorysummary,${DISTDIR}/memoryfile.xml -o ${DISTDIR}/PRJ07_-_CAN2USB.X.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX}  ${OBJECTFILES_QUOTED_IF_SPACED}     
+	@${RM} ${DISTDIR}/PRJ07_-_CAN2USB.X.${IMAGE_TYPE}.hex 
+	
+	
+else
+${DISTDIR}/PRJ07_-_CAN2USB.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}: ${OBJECTFILES}  nbproject/Makefile-${CND_CONF}.mk   
+	@${MKDIR} ${DISTDIR} 
+	${MP_CC} $(MP_EXTRA_LD_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -Wl,-Map=${DISTDIR}/PRJ07_-_CAN2USB.X.${IMAGE_TYPE}.map  -DXPRJ_default=$(CND_CONF)  -Wl,--defsym=__MPLAB_BUILD=1   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits -std=c90 -gdwarf-3 -mstack=compiled:auto:auto:auto     $(COMPARISON_BUILD) -Wl,--memorysummary,${DISTDIR}/memoryfile.xml -o ${DISTDIR}/PRJ07_-_CAN2USB.X.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX}  ${OBJECTFILES_QUOTED_IF_SPACED}     
+	
+	
+endif
+
+
+# Subprojects
+.build-subprojects:
+
+
+# Subprojects
+.clean-subprojects:
+
+# Clean Targets
+.clean-conf: ${CLEAN_SUBPROJECTS}
+	${RM} -r ${OBJECTDIR}
+	${RM} -r ${DISTDIR}
+
+# Enable dependency checking
+.dep.inc: .depcheck-impl
+
+DEPFILES=$(wildcard ${POSSIBLE_DEPFILES})
+ifneq (${DEPFILES},)
+include ${DEPFILES}
+endif

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>com.microchip.mplab.nbide.embedded.makeproject</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/make-project/1">
+            <name>PRJ05 - ECU2CAN</name>
+            <creation-uuid>2016700f-2a94-4e0d-a265-38482a966ca0</creation-uuid>
+            <make-project-type>0</make-project-type>
+            <c-extensions>c</c-extensions>
+            <cpp-extensions/>
+            <header-extensions>DEF,H</header-extensions>
+            <asminc-extensions/>
+            <sourceEncoding>ISO-8859-1</sourceEncoding>
+            <make-dep-projects/>
+            <sourceRootList>
+                <sourceRootElem>../../../../../../../Program Files (x86)/Microchip/xc8/v1.42/dat/lkr</sourceRootElem>
+                <sourceRootElem>../../../../../../../Program Files (x86)/Microchip/xc8/v1.42/include</sourceRootElem>
+                <sourceRootElem>.</sourceRootElem>
+                <sourceRootElem>../../../../../../../Program Files (x86)/Microchip/xc8/v1.45/dat/lkr</sourceRootElem>
+                <sourceRootElem>../../../../../../../Program Files (x86)/Microchip/xc8/v2.10/mpasmx/LKR</sourceRootElem>
+            </sourceRootList>
+            <confList>
+                <confElem>
+                    <name>default</name>
+                    <type>2</type>
+                </confElem>
+            </confList>
+            <formatting>
+                <project-formatting-style>false</project-formatting-style>
+            </formatting>
+        </data>
+    </configuration>
+</project>

@@ -1,0 +1,9 @@
+
+#define CAN_MAX_RCV_ENDP	8
+#define CO_NUM_OF_RPDO	1
+#define CO_NUM_OF_TPDO	2
+#define	CO_SPEED_UP_CODE	0
+#define CO_TICK_PERIOD		8 
+#define	CO_SDO1_MAX_RX_BUF		20
+#define CO_SDO1_MAX_SEG_TIME	500		// Time in milliseconds
+

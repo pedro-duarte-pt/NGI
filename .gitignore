@@ -59,3 +59,27 @@ sysinfo.txt
 *.tmp
 *.bak
 *.swp
+
+# =========================
+# MPLAB X / XC generated
+# =========================
+
+# Build output
+**/build/
+**/debug/
+**/dist/
+**/report/
+
+# MPLAB debug trace
+**/dfmplabxtrace.log
+**/dfmplabxtrace.log.inx
+
+# MPLAB private/machine-specific project state
+**/nbproject/private/
+
+# Common generated files
+*.hex
+*.elf
+*.map
+*.o
+*.d

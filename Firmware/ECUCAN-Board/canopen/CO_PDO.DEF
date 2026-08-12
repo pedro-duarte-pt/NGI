@@ -1,0 +1,119 @@
+
+
+#include "DemoObj.h"
+#include "../dlog.h"		// Datalogger data variables for PDO mapping
+
+
+/*********************************************************************
+ * This memory region defines receive PDOs. All the indices in this
+ * definition must range from 0x1400 to 0x15FF. 
+ ********************************************************************/
+//DATA for RPDO
+
+#define		DICTIONARY_PDO1_RX_COMM									\
+			{0x1400,0x00,CONST,1,{(const unsigned char *)&rMaxIndex1}},		\
+			{0x1400,0x01,_RW | FUNC,4,{(const unsigned char *)CO_COMM_RPDO1_COBIDAccessEvent}}	
+
+
+#define		DICTIONARY_PDO2_RX_COMM									\
+			{0x1401,0x00,_RW,1,{(const unsigned char *)&__dummy}}
+		
+
+#define		DICTIONARY_PDO3_RX_COMM									\
+			{0x1402,0x00,_RW,1,{(const unsigned char *)&__dummy}}
+		
+
+#define		DICTIONARY_PDO4_RX_COMM									\
+			{0x1403,0x00,_RW,1,{(const unsigned char *)&__dummy}}
+
+/*********************************************************************
+ * This memory region defines receive PDOs mapping. All the indices 
+ * in this definition must range from 0x1600 to 0x17FF. 
+ ********************************************************************/
+//MAPPINGS for RPDO
+#define		DICTIONARY_PDO1_RX_MAP											\
+			{0x1600,0x00,CONST,1,{(const unsigned char *)&rMaxIndex2}},	\
+			{0x1600,0x01,CONST,4,{(const unsigned char *)&uRPDO1Map}},		\
+			{0x1600,0x02,CONST,4,{(const unsigned char *)&uPDO1Dummy}},		\
+			{0x1600,0x03,CONST,4,{(const unsigned char *)&uPDO1Dummy}},		\
+			{0x1600,0x04,CONST,4,{(const unsigned char *)&uPDO1Dummy}},		\
+			{0x1600,0x05,CONST,4,{(const unsigned char *)&uPDO1Dummy}},		\
+			{0x1600,0x06,CONST,4,{(const unsigned char *)&uPDO1Dummy}},		\
+			{0x1600,0x07,CONST,4,{(const unsigned char *)&uPDO1Dummy}},		\
+			{0x1600,0x08,CONST,4,{(const unsigned char *)&uPDO1Dummy}}
+
+#define		DICTIONARY_PDO2_RX_MAP							\
+			{0x1601,0x00,RO,1,{(const unsigned char *)&__dummy}}
+
+#define		DICTIONARY_PDO3_RX_MAP							\
+			{0x1602,0x00,_RW,1,{(const unsigned char *)&__dummy}}
+
+#define		DICTIONARY_PDO4_RX_MAP							\
+			{0x1603,0x00,_RW,1,{(const unsigned char *)&__dummy}}
+
+/*********************************************************************
+ * This memory region defines transmit PDOs. All the indices in this
+ * definition must range from 0x1800 to 0x19FF. 
+ ********************************************************************/
+//DATA for TPDO					
+#define		DICTIONARY_PDO1_TX_COMM							\
+			{0x1800,0x00,CONST,1,{(const unsigned char *)&TPDO1_defnum}},		\
+			{0x1800,0x01,_RW | FUNC,4,{(const unsigned char *)CO_COMM_TPDO1_COBIDAccessEvent}},	\
+			{0x1800,0x02,_RW | FUNC,1,{(const unsigned char *)CO_COMM_TPDO1_TypeAccessEvent}}
+
+#define		DICTIONARY_PDO2_TX_COMM							\
+			{0x1801,0x00,CONST,1,{(const unsigned char *)&TPDO2_defnum}},		\
+			{0x1801,0x01,_RW | FUNC,4,{(const unsigned char *)CO_COMM_TPDO2_COBIDAccessEvent}},	\
+			{0x1801,0x02,_RW | FUNC,1,{(const unsigned char *)CO_COMM_TPDO2_TypeAccessEvent}}
+
+#define		DICTIONARY_PDO3_TX_COMM							\
+			{0x1802,0x00,_RW,1,{(const unsigned char *)&__dummy}}
+
+#define		DICTIONARY_PDO4_TX_COMM							\
+			{0x1803,0x00,_RW,1,{(const unsigned char *)&__dummy}}
+
+
+/*********************************************************************
+ * This memory region defines receive PDOs mapping. All the indices 
+ * in this definition must range from 0x1A00 to 0x1BFF. 
+ ********************************************************************/
+//MAPPING for TPDO				
+
+#define		DICTIONARY_PDO1_TX_MAP                                              \
+			{0x1A00,0x00,CONST,8,{(const unsigned char *)&TPDO1_objnum}},       \
+			{0x1A00,0x01,CONST,8,{(const unsigned char *)&_dict_dl_vss}},		\
+			{0x1A00,0x02,CONST,8,{(const unsigned char *)&_dict_dl_inj_low}},	\
+			{0x1A00,0x03,CONST,8,{(const unsigned char *)&_dict_dl_inj_hi}},	\
+			{0x1A00,0x04,CONST,8,{(const unsigned char *)&_dict_dl_o2}},        \
+			{0x1A00,0x05,CONST,8,{(const unsigned char *)&_dict_dl_tps}},		\
+			{0x1A00,0x06,CONST,8,{(const unsigned char *)&_dict_dl_rpm_low}},	\
+			{0x1A00,0x07,CONST,8,{(const unsigned char *)&_dict_dl_rpm_hi}},	\
+			{0x1A00,0x08,CONST,4,{(const unsigned char *)&_dict_dl_gear}},		\
+			{0x1A00,0x09,CONST,1,{(const unsigned char *)&_dict_dl_vtec1}},		\
+			{0x1A00,0x0A,CONST,1,{(const unsigned char *)&_dict_dl_vtec2}},		\
+			{0x1A00,0x0B,CONST,1,{(const unsigned char *)&_dict_dl_brake}},		\
+			{0x1A00,0x0C,CONST,1,{(const unsigned char *)&_dict_dl_vtp}}
+
+#define		DICTIONARY_PDO2_TX_MAP                                              \
+			{0x1A01,0x00,CONST,1,{(const unsigned char *)&TPDO2_objnum}},       \
+			{0x1A01,0x01,CONST,8,{(const unsigned char *)&_dict_dl_dist1}},		\
+			{0x1A01,0x02,CONST,8,{(const unsigned char *)&_dict_dl_dist2}},	\
+			{0x1A01,0x03,CONST,8,{(const unsigned char *)&_dict_dl_dist3}},	\
+			{0x1A01,0x04,CONST,8,{(const unsigned char *)&_dict_dl_iat}},        \
+			{0x1A01,0x05,CONST,8,{(const unsigned char *)&_dict_dl_ect}},		\
+			{0x1A01,0x06,CONST,8,{(const unsigned char *)&_dict_dl_bat}},	\
+			{0x1A01,0x07,CONST,8,{(const unsigned char *)&_dict_dl_iac}},	\
+			{0x1A01,0x08,CONST,1,{(const unsigned char *)&_dict_dl_acc}},		\
+			{0x1A01,0x09,CONST,1,{(const unsigned char *)&_dict_dl_pcs}},		\
+			{0x1A01,0x0A,CONST,1,{(const unsigned char *)&_dict_dl_altc}},		\
+			{0x1A01,0x0B,CONST,1,{(const unsigned char *)&_dict_dl_fanc}},		\
+			{0x1A01,0x0C,CONST,1,{(const unsigned char *)&_dict_dl_iab}},        \
+			{0x1A01,0x0D,CONST,1,{(const unsigned char *)&_dict_dl_flr}},       \
+			{0x1A01,0x0E,CONST,1,{(const unsigned char *)&_dict_dl_mil}},       \
+			{0x1A01,0x0F,CONST,1,{(const unsigned char *)&_dict_dl_pwrsteer}}
+
+#define		DICTIONARY_PDO3_TX_MAP                                              \
+			{0x1A02,0x00,_RW,1,{(const unsigned char *)&__dummy}}
+
+#define		DICTIONARY_PDO4_TX_MAP                                              \
+			{0x1A03,0x00,_RW,1,{(const unsigned char *)&__dummy}}
