@@ -1,0 +1,38 @@
+{
+  "rules": [
+    { "selector": "screen-root", "backgroundColor": "#060708" },
+
+    { "selector": "dashboard-header", "backgroundColor": "#050607", "borderColor": "#E01919", "borderWidth": 1, "paddingLeft": 12, "paddingRight": 12, "paddingTop": 8, "paddingBottom": 8, "flexDirection": "row", "alignItems": "center" },
+    { "selector": "dashboard-brand", "flexDirection": "row", "alignItems": "center" },
+    { "selector": "dashboard-logo", "marginRight": 12 },
+    { "selector": "image-widget-image", "alignItems": "center", "justifyContent": "center" },
+    { "selector": "dashboard-title-block", "justifyContent": "center" },
+    { "selector": "dashboard-title", "color": "#FFFFFF", "fontSize": 19, "bold": true },
+    { "selector": "dashboard-subtitle", "color": "#B7B7B7", "fontSize": 12 },
+
+    { "selector": "sensor-widget", "backgroundColor": "#090B0D", "borderColor": "#3A3E42", "borderWidth": 1, "borderRadius": 8, "paddingLeft": 10, "paddingRight": 10, "paddingTop": 7, "paddingBottom": 7 },
+    { "selector": "sensor-widget-header", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" },
+    { "selector": "sensor-widget-name", "color": "#FFFFFF", "fontSize": 17, "bold": true },
+    { "selector": "sensor-widget-selection-dash", "borderRadius": 2 },
+    { "selector": "sensor-widget-value-area", "alignItems": "center", "justifyContent": "center", "paddingTop": 10 },
+    { "selector": "sensor-widget-value", "color": "#FFFFFF", "fontSize": 35, "textAlign": "middle-center" },
+    { "selector": "sensor-widget-unit", "color": "#D5D5D5", "fontSize": 16, "textAlign": "middle-center", "marginTop": -4 },
+    { "selector": "sensor-widget-selected", "backgroundColor": "#0D090A", "borderColor": "#E01919", "borderWidth": 2 },
+
+    { "selector": "sensor-trace-widget", "backgroundColor": "#080A0C", "borderColor": "#393D41", "borderWidth": 1, "borderRadius": 9, "paddingLeft": 12, "paddingRight": 12, "paddingTop": 10, "paddingBottom": 10 },
+
+    { "selector": "sensor-trace-legend", "flexDirection": "row", "alignItems": "center", "justifyContent": "center", "paddingTop": 8, "paddingBottom": 10 },
+    { "selector": "sensor-trace-legend-item", "flexDirection": "row", "alignItems": "center", "justifyContent": "center", "marginLeft": 16, "marginRight": 16 },
+    { "selector": "sensor-trace-legend-dash", "borderRadius": 1, "marginRight": 9 },
+    { "selector": "sensor-trace-legend-text", "color": "#FFFFFF", "fontSize": 19, "bold": true },
+    { "selector": "sensor-trace-legend-empty", "color": "#FFFFFF", "fontSize": 18, "bold": true },
+
+    { "selector": "sensor-trace-graph", "backgroundColor": "#06080A", "borderColor": "#272B2F", "borderWidth": 1, "borderRadius": 6 },
+
+    { "selector": "sensor-trace-bottom-controls", "flexDirection": "row", "alignItems": "center", "justifyContent": "center", "marginTop": 10 },
+    { "selector": "sensor-trace-window-buttons", "flexDirection": "row", "alignItems": "center" },
+    { "selector": "sensor-trace-window-button", "backgroundColor": "#101214", "color": "#FFFFFF", "fontSize": 15, "bold": true, "borderColor": "#34383C", "borderWidth": 1, "borderRadius": 7, "paddingLeft": 22, "paddingRight": 22, "paddingTop": 14, "paddingBottom": 14, "marginLeft": 4, "marginRight": 4 },
+    { "selector": "sensor-trace-window-button-active", "borderColor": "#F01818", "borderWidth": 2 },
+    { "selector": "sensor-trace-reset-button", "borderColor": "#E01919", "marginLeft": 14 }
+  ]
+}

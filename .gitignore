@@ -1,0 +1,61 @@
+# =========================
+# Unity generated folders
+# =========================
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+
+# Unity generated UI Toolkit schemas
+**/UIElementsSchema/
+
+# Memory captures
+[Mm]emoryCaptures/
+
+# Asset Store tools
+[Aa]ssets/AssetStoreTools*
+
+# Unity directory monitor temporary files
+**/~UnityDirMonSyncFile~*
+
+# Unity local ignore template
+**/ignore.conf
+
+# =========================
+# IDE / Visual Studio
+# =========================
+.vs/
+.vscode/
+.idea/
+
+*.csproj
+*.sln
+*.slnx
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# =========================
+# OS generated
+# =========================
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# =========================
+# Unity crash / temporary
+# =========================
+sysinfo.txt
+*.tmp
+*.bak
+*.swp

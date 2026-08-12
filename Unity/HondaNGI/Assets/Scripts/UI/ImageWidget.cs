@@ -1,0 +1,68 @@
+using System.IO;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+public sealed class ImageWidget : IRuntimeWidget
+{
+    private readonly VisualElement root;
+    public VisualElement Root => root;
+
+    public ImageWidget(WidgetDefinition definition, WidgetContext context)
+    {
+        root = new VisualElement();
+        root.AddToClassList("image-widget");
+
+        if (context == null ||
+            string.IsNullOrWhiteSpace(context.AddonRootPath) ||
+            string.IsNullOrWhiteSpace(definition.asset))
+        {
+            Debug.LogWarning("ImageWidget has no valid addon root/asset path.");
+            return;
+        }
+
+        string path = Path.Combine(
+            context.AddonRootPath,
+            definition.asset.Replace('/', Path.DirectorySeparatorChar)
+        );
+
+        if (!File.Exists(path))
+        {
+            Debug.LogWarning("Addon image asset not found: " + path);
+            return;
+        }
+
+        byte[] bytes = File.ReadAllBytes(path);
+        Texture2D texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+
+        if (!texture.LoadImage(bytes))
+        {
+            Debug.LogWarning("Could not decode addon image asset: " + path);
+            Object.Destroy(texture);
+            return;
+        }
+
+        texture.name = Path.GetFileNameWithoutExtension(path);
+
+        var image = new Image();
+        image.image = texture;
+        image.AddToClassList("image-widget-image");
+
+        switch ((definition.scaleMode ?? "").ToLowerInvariant())
+        {
+            case "stretch":
+                image.scaleMode = ScaleMode.StretchToFill;
+                break;
+            case "crop":
+                image.scaleMode = ScaleMode.ScaleAndCrop;
+                break;
+            default:
+                image.scaleMode = ScaleMode.ScaleToFit;
+                break;
+        }
+
+        image.style.flexGrow = 1;
+        root.Add(image);
+    }
+
+    public void Refresh() { }
+}

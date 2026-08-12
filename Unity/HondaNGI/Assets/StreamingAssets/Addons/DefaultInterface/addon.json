@@ -1,0 +1,15 @@
+{
+  "id": "core.default",
+  "name": "Default Interface",
+  "version": "1.0.0",
+  "compatibility": {
+    "minAddonApi": "1.0.0",
+    "maxAddonApi": ""
+  },
+  "screens": [
+    {
+      "id": "diagnostics",
+      "path": "screens/diagnostics"
+    }
+  ]
+}
