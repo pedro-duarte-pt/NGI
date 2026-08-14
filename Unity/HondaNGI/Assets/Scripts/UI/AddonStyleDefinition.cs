@@ -10,5 +10,5 @@ public sealed class AddonStyleProperties
     public OptionalFloat fontSize, width, height, minWidth, minHeight;
     public OptionalFloat paddingLeft, paddingRight, paddingTop, paddingBottom;
     public OptionalFloat marginLeft, marginRight, marginTop, marginBottom;
-    public OptionalFloat borderWidth, borderRadius, flexGrow, opacity;
+    public OptionalFloat borderWidth, borderRadius, flexGrow, opacity, lineWidth;
 }

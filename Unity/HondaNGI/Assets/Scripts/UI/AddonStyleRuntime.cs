@@ -34,47 +34,54 @@ public sealed class AddonStyleRuntime
         return true;
     }
 
+    public AddonStyleProperties Resolve(params string[] styleNames)
+    {
+        if (resolver == null)
+            return new AddonStyleProperties();
+
+        return resolver.Resolve(styleNames, null);
+    }
+
+    public AddonStyleProperties Resolve(
+        IEnumerable<string> styleNames,
+        IEnumerable<string> activeStates)
+    {
+        if (resolver == null)
+            return new AddonStyleProperties();
+
+        return resolver.Resolve(styleNames, activeStates);
+    }
+
     public void ApplyRecursive(VisualElement root)
     {
-        if (root == null)
-            return;
-
+        if (root == null) return;
         ApplyElement(root);
-
         foreach (VisualElement child in root.Children())
             ApplyRecursive(child);
     }
 
     public void ApplyElement(VisualElement element)
     {
-        if (element == null || resolver == null)
-            return;
+        if (element == null || resolver == null) return;
 
         states.TryGetValue(element, out HashSet<string> activeStates);
-
-        AddonStyleProperties resolved =
-            resolver.Resolve(element.GetClasses(), activeStates);
-
-        AddonStyleApplier.Apply(element, resolved);
+        AddonStyleApplier.Apply(
+            element,
+            resolver.Resolve(element.GetClasses(), activeStates));
     }
 
     public void SetState(VisualElement element, string state, bool enabled)
     {
-        if (element == null || string.IsNullOrWhiteSpace(state))
-            return;
+        if (element == null || string.IsNullOrWhiteSpace(state)) return;
 
         if (!states.TryGetValue(element, out HashSet<string> elementStates))
         {
-            elementStates =
-                new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
+            elementStates = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             states[element] = elementStates;
         }
 
-        if (enabled)
-            elementStates.Add(state);
-        else
-            elementStates.Remove(state);
+        if (enabled) elementStates.Add(state);
+        else elementStates.Remove(state);
 
         ApplyElement(element);
     }

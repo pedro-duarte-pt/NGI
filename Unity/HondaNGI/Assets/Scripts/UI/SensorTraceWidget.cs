@@ -56,15 +56,12 @@ public sealed class SensorTraceWidget : IRuntimeWidget
 
         root = new VisualElement();
         root.AddToClassList("sensor-trace-widget");
-        root.style.flexDirection = FlexDirection.Column;
 
         legendContainer = new VisualElement();
         legendContainer.AddToClassList("sensor-trace-legend");
 
         graph = new VisualElement();
         graph.AddToClassList("sensor-trace-graph");
-        graph.style.flexGrow = 1;
-        graph.style.minHeight = 250;
         graph.generateVisualContent += DrawGraph;
 
         // Text cannot reliably be created from generateVisualContent.
@@ -284,8 +281,6 @@ private void UpdateWindowButtons()
             styles?.ApplyElement(text);
 
             dash.style.backgroundColor = palette[index % palette.Count];
-            dash.style.width = 34;
-            dash.style.height = 4;
 
             index++;
         }
@@ -303,10 +298,11 @@ private void UpdateWindowButtons()
         Painter2D painter = context.painter2D;
 
         // Space reserved for Y labels on the left and the shared X scale below.
-        const float yAxisWidth = 48f;
-        const float xAxisHeight = 24f;
-        const float topPadding = 8f;
-        const float rightPadding = 8f;
+        AddonStyleProperties plotStyle = Style("sensor-trace-plot");
+        float yAxisWidth = Number(plotStyle.width, 48f);
+        float xAxisHeight = Number(plotStyle.height, 24f);
+        float topPadding = Number(plotStyle.paddingTop, 8f);
+        float rightPadding = Number(plotStyle.paddingRight, 8f);
 
         float plotLeft = r.xMin + yAxisWidth;
         float plotRight = r.xMax - rightPadding;
@@ -328,8 +324,11 @@ private void UpdateWindowButtons()
         // Shared vertical time grid.
         const int xDivisions = 6;
 
-        painter.lineWidth = 1f;
-        painter.strokeColor = new Color(0.12f, 0.14f, 0.16f, 1f);
+        AddonStyleProperties timeGridStyle = Style("sensor-trace-time-grid");
+        painter.lineWidth = Number(timeGridStyle.lineWidth, 1f);
+        painter.strokeColor = StyleColor(
+            timeGridStyle.color,
+            new Color(0.12f, 0.14f, 0.16f, 1f));
 
         for (int i = 0; i <= xDivisions; i++)
         {
@@ -356,8 +355,10 @@ private void UpdateWindowButtons()
             float laneBottom = laneTop + laneHeight;
 
             // A little breathing room inside each lane.
-            float innerTop = laneTop + 6f;
-            float innerBottom = laneBottom - 6f;
+            AddonStyleProperties laneStyle = Style("sensor-trace-lane");
+            float lanePadding = Number(laneStyle.paddingTop, 6f);
+            float innerTop = laneTop + lanePadding;
+            float innerBottom = laneBottom - lanePadding;
 
             Color traceColor =
                 palette[laneIndex % palette.Count];
@@ -415,15 +416,22 @@ private void UpdateWindowButtons()
     {
         const int yDivisions = 2;
 
-        painter.lineWidth = 1f;
-        painter.strokeColor = new Color(0.18f, 0.20f, 0.22f, 1f);
+        AddonStyleProperties separatorStyle = Style("sensor-trace-separator");
+        painter.lineWidth = Number(separatorStyle.lineWidth, 1f);
+        painter.strokeColor = StyleColor(
+            separatorStyle.color,
+            new Color(0.18f, 0.20f, 0.22f, 1f));
 
         painter.BeginPath();
         painter.MoveTo(new Vector2(plotLeft, laneBottom));
         painter.LineTo(new Vector2(plotRight, laneBottom));
         painter.Stroke();
 
-        painter.strokeColor = new Color(0.11f, 0.13f, 0.15f, 1f);
+        AddonStyleProperties laneGridStyle = Style("sensor-trace-lane-grid");
+        painter.lineWidth = Number(laneGridStyle.lineWidth, 1f);
+        painter.strokeColor = StyleColor(
+            laneGridStyle.color,
+            new Color(0.11f, 0.13f, 0.15f, 1f));
 
         for (int i = 0; i <= yDivisions; i++)
         {
@@ -453,7 +461,8 @@ private void UpdateWindowButtons()
         if (Mathf.Approximately(min, max))
             max = min + 1f;
 
-        painter.lineWidth = 2f;
+        AddonStyleProperties traceStyle = Style("sensor-trace-line");
+        painter.lineWidth = Number(traceStyle.lineWidth, 2f);
         painter.strokeColor = traceColor;
         painter.BeginPath();
 
@@ -496,8 +505,11 @@ private void UpdateWindowButtons()
         float plotBottom,
         int divisions)
     {
-        painter.lineWidth = 1f;
-        painter.strokeColor = new Color(0.30f, 0.32f, 0.34f, 1f);
+        AddonStyleProperties axisStyle = Style("sensor-trace-axis");
+        painter.lineWidth = Number(axisStyle.lineWidth, 1f);
+        painter.strokeColor = StyleColor(
+            axisStyle.color,
+            new Color(0.30f, 0.32f, 0.34f, 1f));
 
         painter.BeginPath();
         painter.MoveTo(new Vector2(plotLeft, plotBottom));
@@ -517,10 +529,11 @@ private void UpdateWindowButtons()
         if (r.width <= 1f || r.height <= 1f)
             return;
 
-        const float yAxisWidth = 48f;
-        const float xAxisHeight = 24f;
-        const float topPadding = 8f;
-        const float rightPadding = 8f;
+        AddonStyleProperties plotStyle = Style("sensor-trace-plot");
+        float yAxisWidth = Number(plotStyle.width, 48f);
+        float xAxisHeight = Number(plotStyle.height, 24f);
+        float topPadding = Number(plotStyle.paddingTop, 8f);
+        float rightPadding = Number(plotStyle.paddingRight, 8f);
         const int yDivisions = 2;
         const int xDivisions = 6;
 
@@ -550,8 +563,10 @@ private void UpdateWindowButtons()
 
             float laneTop = plotTop + laneIndex * laneHeight;
             float laneBottom = laneTop + laneHeight;
-            float innerTop = laneTop + 6f;
-            float innerBottom = laneBottom - 6f;
+            AddonStyleProperties laneStyle = Style("sensor-trace-lane");
+            float lanePadding = Number(laneStyle.paddingTop, 6f);
+            float innerTop = laneTop + lanePadding;
+            float innerBottom = laneBottom - lanePadding;
 
             Color traceColor = palette[laneIndex % palette.Count];
 
@@ -564,11 +579,12 @@ private void UpdateWindowButtons()
                 var label = new Label(FormatAxisValue(sensor, value));
                 label.pickingMode = PickingMode.Ignore;
                 label.style.position = Position.Absolute;
-                label.style.left = 2f;
-                label.style.top = y - 9f;
-                label.style.width = 40f;
-                label.style.height = 18f;
-                label.style.fontSize = 15f;
+                AddonStyleProperties yLabelStyle = Style("sensor-trace-y-label");
+                label.style.left = Number(yLabelStyle.marginLeft, 2f);
+                label.style.top = y - Number(yLabelStyle.marginTop, 9f);
+                label.style.width = Number(yLabelStyle.width, 40f);
+                label.style.height = Number(yLabelStyle.height, 18f);
+                label.style.fontSize = Number(yLabelStyle.fontSize, 15f);
                 label.style.unityTextAlign = TextAnchor.MiddleRight;
                 label.style.color = traceColor;
 
@@ -592,16 +608,41 @@ private void UpdateWindowButtons()
             var label = new Label(labelText);
             label.pickingMode = PickingMode.Ignore;
             label.style.position = Position.Absolute;
-            label.style.left = x - 26f;
-            label.style.top = plotBottom + 2f;
-            label.style.width = 52f;
-            label.style.height = 20f;
-            label.style.fontSize = 15f;
+            AddonStyleProperties xLabelStyle = Style("sensor-trace-x-label");
+            float xLabelWidth = Number(xLabelStyle.width, 52f);
+            label.style.left = x - (xLabelWidth * 0.5f);
+            label.style.top = plotBottom + Number(xLabelStyle.marginTop, 2f);
+            label.style.width = xLabelWidth;
+            label.style.height = Number(xLabelStyle.height, 20f);
+            label.style.fontSize = Number(xLabelStyle.fontSize, 15f);
             label.style.unityTextAlign = TextAnchor.MiddleCenter;
-            label.style.color = new Color(0.90f, 0.91f, 0.92f, 1f);
+            label.style.color = StyleColor(
+                xLabelStyle.color,
+                new Color(0.90f, 0.91f, 0.92f, 1f));
 
             axisOverlay.Add(label);
         }
+    }
+
+
+    private AddonStyleProperties Style(string name)
+    {
+        return styles != null
+            ? styles.Resolve(name)
+            : new AddonStyleProperties();
+    }
+
+    private static float Number(OptionalFloat value, float fallback)
+    {
+        return value != null && value.HasValue ? value.value : fallback;
+    }
+
+    private static Color StyleColor(string value, Color fallback)
+    {
+        return !string.IsNullOrWhiteSpace(value) &&
+               ColorUtility.TryParseHtmlString(value, out Color parsed)
+            ? parsed
+            : fallback;
     }
 
     private static string FormatAxisValue(

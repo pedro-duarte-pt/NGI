@@ -34,6 +34,6 @@ public sealed class AddonStyleResolver
         if(!string.IsNullOrWhiteSpace(s.layoutDirection))t.layoutDirection=s.layoutDirection;
         if(!string.IsNullOrWhiteSpace(s.alignItems))t.alignItems=s.alignItems;
         if(!string.IsNullOrWhiteSpace(s.justifyContent))t.justifyContent=s.justifyContent;
-        C(s.flexGrow,ref t.flexGrow);C(s.opacity,ref t.opacity);
+        C(s.flexGrow,ref t.flexGrow);C(s.opacity,ref t.opacity);C(s.lineWidth,ref t.lineWidth);
     }
 }

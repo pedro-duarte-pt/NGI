@@ -280,7 +280,8 @@
         "paddingBottom": {
           "set": true,
           "value": 10
-        }
+        },
+        "layoutDirection": "column"
       }
     },
     {
@@ -325,6 +326,14 @@
         "marginRight": {
           "set": true,
           "value": 9
+        },
+        "width": {
+          "set": true,
+          "value": 34
+        },
+        "height": {
+          "set": true,
+          "value": 4
         }
       }
     },
@@ -362,6 +371,14 @@
         "borderRadius": {
           "set": true,
           "value": 6
+        },
+        "minHeight": {
+          "set": true,
+          "value": 250
+        },
+        "flexGrow": {
+          "set": true,
+          "value": 1
         }
       }
     },
@@ -448,6 +465,132 @@
         "marginLeft": {
           "set": true,
           "value": 14
+        }
+      }
+    },
+    {
+      "name": "sensor-trace-plot",
+      "style": {
+        "width": {
+          "set": true,
+          "value": 48
+        },
+        "height": {
+          "set": true,
+          "value": 24
+        },
+        "paddingTop": {
+          "set": true,
+          "value": 8
+        },
+        "paddingRight": {
+          "set": true,
+          "value": 8
+        }
+      }
+    },
+    {
+      "name": "sensor-trace-lane",
+      "style": {
+        "paddingTop": {
+          "set": true,
+          "value": 6
+        }
+      }
+    },
+    {
+      "name": "sensor-trace-time-grid",
+      "style": {
+        "color": "#1F2429",
+        "lineWidth": {
+          "set": true,
+          "value": 1
+        }
+      }
+    },
+    {
+      "name": "sensor-trace-separator",
+      "style": {
+        "color": "#2E3338",
+        "lineWidth": {
+          "set": true,
+          "value": 1
+        }
+      }
+    },
+    {
+      "name": "sensor-trace-lane-grid",
+      "style": {
+        "color": "#1C2126",
+        "lineWidth": {
+          "set": true,
+          "value": 1
+        }
+      }
+    },
+    {
+      "name": "sensor-trace-line",
+      "style": {
+        "lineWidth": {
+          "set": true,
+          "value": 2
+        }
+      }
+    },
+    {
+      "name": "sensor-trace-axis",
+      "style": {
+        "color": "#4D5257",
+        "lineWidth": {
+          "set": true,
+          "value": 1
+        }
+      }
+    },
+    {
+      "name": "sensor-trace-y-label",
+      "style": {
+        "fontSize": {
+          "set": true,
+          "value": 15
+        },
+        "width": {
+          "set": true,
+          "value": 40
+        },
+        "height": {
+          "set": true,
+          "value": 18
+        },
+        "marginLeft": {
+          "set": true,
+          "value": 2
+        },
+        "marginTop": {
+          "set": true,
+          "value": 9
+        }
+      }
+    },
+    {
+      "name": "sensor-trace-x-label",
+      "style": {
+        "color": "#E6E8EA",
+        "fontSize": {
+          "set": true,
+          "value": 15
+        },
+        "width": {
+          "set": true,
+          "value": 52
+        },
+        "height": {
+          "set": true,
+          "value": 20
+        },
+        "marginTop": {
+          "set": true,
+          "value": 2
         }
       }
     }
