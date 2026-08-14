@@ -27,7 +27,7 @@ public sealed class SensorTraceWidget : IRuntimeWidget
     private readonly Dictionary<string, TraceData> traces =
         new Dictionary<string, TraceData>(StringComparer.OrdinalIgnoreCase);
 
-    private readonly float[] allowedWindows = { 5f, 10f, 30f, 60f, 120f };
+    private readonly float[] allowedWindows;
     private readonly List<Color> palette = new List<Color>();
 
     private float windowSeconds;
@@ -40,6 +40,11 @@ public sealed class SensorTraceWidget : IRuntimeWidget
         AddonStyleRuntime styles = null)
     {
         this.styles = styles;
+
+        float[] configuredWindows = definition.PropFloatArray("windowOptions");
+        allowedWindows = configuredWindows != null && configuredWindows.Length > 0
+            ? configuredWindows
+            : new[] { 5f, 10f, 30f, 60f, 120f };
 
         windowSeconds = definition.PropFloat("windowSeconds") > 0f
             ? definition.PropFloat("windowSeconds")

@@ -111,6 +111,21 @@ public sealed class WidgetDefinition
         catch { return fallback; }
     }
 
+    public float[] PropFloatArray(string key)
+    {
+        if (Props == null || !Props.TryGetValue(key, out object v)) return null;
+        var array = AddonJson.Arr(v);
+        if (array == null) return null;
+
+        var result = new float[array.Count];
+        for (int i = 0; i < array.Count; i++)
+        {
+            try { result[i] = Convert.ToSingle(array[i], CultureInfo.InvariantCulture); }
+            catch { result[i] = 0f; }
+        }
+        return result;
+    }
+
     public string[] PropStringArray(string key)
     {
         if (Props == null || !Props.TryGetValue(key, out object v)) return null;
