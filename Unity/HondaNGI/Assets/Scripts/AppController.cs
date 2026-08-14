@@ -1,9 +1,13 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using integrationBoard;
 
 public class AppController : MonoBehaviour
 {
+    private const int DataloggingPacketSize = 64;
+    private const float ConnectedPollDelaySeconds = 0.001f;
+    private const float ReconnectDelaySeconds = 1.0f;
+
     private Coroutine dataLoggingCoroutine;
 
     private void Start()
@@ -15,9 +19,12 @@ public class AppController : MonoBehaviour
     {
         while (true)
         {
-            DeviceLib.getDataloggingData(64);
+            int result = DeviceLib.getDataloggingData(DataloggingPacketSize);
 
-            yield return new WaitForSeconds(0.001f);
+            if (result == 0 && DeviceLib.IsDataloggingConnected)
+                yield return new WaitForSeconds(ConnectedPollDelaySeconds);
+            else
+                yield return new WaitForSeconds(ReconnectDelaySeconds);
         }
     }
 
@@ -26,14 +33,9 @@ public class AppController : MonoBehaviour
         if (dataLoggingCoroutine != null)
         {
             StopCoroutine(dataLoggingCoroutine);
+            dataLoggingCoroutine = null;
         }
 
         DeviceLib.releaseDataloggingDevice();
     }
-
-    void Update()
-    {
-
-    }
-
 }

@@ -46,18 +46,9 @@ namespace integrationBoard
                 {
                     if ((device_handle == null) || device_handle.IsInvalid)
                     {
-                        if (getDataloggingDevice() > 0) { sessionHandle = null; device_handle = null; break; }
+                        if (getDataloggingDevice() > 0) { r = 1; break; }
                     }
 
-                    // Set configuration
-                    //Debug.Log("Set Config..");
-                    r = MonoUsbApi.SetConfiguration(device_handle, MY_CONFIG);
-                    if (r != 0) break;
-
-                    // Claim interface
-                    //Debug.Log("Set Interface..");
-                    r = MonoUsbApi.ClaimInterface(device_handle, MY_INTERFACE);
-                    if (r != 0) break;
 
                     //////////////////////
                     // GET LOGGING DATA //
@@ -93,8 +84,9 @@ namespace integrationBoard
                     }
                     else if (r != 0)
                     {
-                        // An error, other than ErrorTimeout was received. 
-                        Debug.Log("Read failed: " + (MonoUsbError)r);
+                        // An error, other than ErrorTimeout was received.
+                        Debug.LogWarning("Read failed: " + (MonoUsbError)r);
+                        releaseDataloggingDevice();
                     }
                     else
                     {
@@ -113,10 +105,8 @@ namespace integrationBoard
             }
             catch (Exception e)
             {
-                device_handle = null;
-                sessionHandle = null;
-                Debug.Log("Something went wrong");
-                Console.WriteLine("{0} Exception caught.", e);
+                releaseDataloggingDevice();
+                Debug.LogWarning("CANUSB operation failed: " + e.Message);
             }
 
 
@@ -136,6 +126,11 @@ namespace integrationBoard
 
         private static MonoUsbSessionHandle sessionHandle = null;
         private static MonoUsbDeviceHandle device_handle = null;
+        private static bool interfaceClaimed = false;
+
+        public static bool IsDataloggingConnected =>
+            sessionHandle != null && !sessionHandle.IsInvalid &&
+            device_handle != null && !device_handle.IsInvalid;
 
         // This function originated from bulk_transfer_cb()
         // in sync.c of the Libusb-1.0 source code.
@@ -155,118 +150,180 @@ namespace integrationBoard
                                                           int timeout)
         {
             transferred = 0;
+
+            if (dev_handle == null || dev_handle.IsInvalid ||
+                sessionHandle == null || sessionHandle.IsInvalid)
+                return MonoUsbError.ErrorNoDevice;
+
             MonoUsbTransfer transfer = new MonoUsbTransfer(0);
-            if (transfer.IsInvalid) return MonoUsbError.ErrorNoMem;
+            GCHandle gcUserCompleted = default(GCHandle);
+            GCHandle gcBuffer = default(GCHandle);
 
-            MonoUsbTransferDelegate monoUsbTransferCallbackDelegate = bulkTransferCB;
-            int[] userCompleted = new int[] { 0 };
-            GCHandle gcUserCompleted = GCHandle.Alloc(userCompleted, GCHandleType.Pinned);
-
-            MonoUsbError e;
-            GCHandle gcBuffer = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-            transfer.FillBulk(
-                dev_handle,
-                endpoint,
-                gcBuffer.AddrOfPinnedObject(),
-                length,
-                monoUsbTransferCallbackDelegate,
-                gcUserCompleted.AddrOfPinnedObject(),
-                timeout);
-
-            e = transfer.Submit();
-            if ((int)e < 0)
+            try
             {
-                transfer.Free();
-                gcUserCompleted.Free();
-                return e;
-            }
-            int r;
-            //Debug.Log("Transfer Submitted..");
-            while (userCompleted[0] == 0)
-            {
-                e = (MonoUsbError)(r = Usb.HandleEvents(sessionHandle));
-                if (r < 0)
+                if (transfer.IsInvalid)
+                    return MonoUsbError.ErrorNoMem;
+
+                MonoUsbTransferDelegate callback = bulkTransferCB;
+                int[] userCompleted = new int[] { 0 };
+                gcUserCompleted = GCHandle.Alloc(userCompleted, GCHandleType.Pinned);
+                gcBuffer = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+
+                transfer.FillBulk(
+                    dev_handle,
+                    endpoint,
+                    gcBuffer.AddrOfPinnedObject(),
+                    length,
+                    callback,
+                    gcUserCompleted.AddrOfPinnedObject(),
+                    timeout);
+
+                MonoUsbError error = transfer.Submit();
+                if ((int)error < 0)
+                    return error;
+
+                while (userCompleted[0] == 0)
                 {
-                    if (e == MonoUsbError.ErrorInterrupted)
-                        continue;
-                    transfer.Cancel();
-                    while (userCompleted[0] == 0)
-                        if (Usb.HandleEvents(sessionHandle) < 0)
-                            break;
-                    transfer.Free();
-                    gcUserCompleted.Free();
-                    return e;
-                }
-            }
+                    int result = Usb.HandleEvents(sessionHandle);
+                    error = (MonoUsbError)result;
 
-            transferred = transfer.ActualLength;
-            e = MonoUsbApi.MonoLibUsbErrorFromTransferStatus(transfer.Status);
-            transfer.Free();
-            gcUserCompleted.Free();
-            return e;
+                    if (result >= 0)
+                        continue;
+
+                    if (error == MonoUsbError.ErrorInterrupted)
+                        continue;
+
+                    transfer.Cancel();
+
+                    // Give libusb a chance to complete the cancellation before
+                    // the transfer and pinned buffers are released.
+                    while (userCompleted[0] == 0)
+                    {
+                        result = Usb.HandleEvents(sessionHandle);
+                        if (result < 0 &&
+                            (MonoUsbError)result != MonoUsbError.ErrorInterrupted)
+                            break;
+                    }
+
+                    return error;
+                }
+
+                transferred = transfer.ActualLength;
+                return MonoUsbApi.MonoLibUsbErrorFromTransferStatus(transfer.Status);
+            }
+            finally
+            {
+                if (!transfer.IsInvalid)
+                    transfer.Free();
+
+                if (gcBuffer.IsAllocated)
+                    gcBuffer.Free();
+
+                if (gcUserCompleted.IsAllocated)
+                    gcUserCompleted.Free();
+            }
         }
 
         public static UsbDevice MyUsbDevice;
 
         public static int getDataloggingDevice()
         {
+            if (IsDataloggingConnected)
+                return 0;
+
+            // Never abandon a previous SafeHandle and leave cleanup to the
+            // Mono finalizer thread. The crash report showed libusb_close()
+            // being reached from SafeHandle.Finalize after a disconnect.
+            releaseDataloggingDevice();
 
             try
             {
-                if ((sessionHandle == null) || (sessionHandle.IsInvalid))  { 
-                    //Debug.Log("Create USB Handle..");
-                    sessionHandle = new MonoUsbSessionHandle();
-                    //Debug.Log("USB Handle created..");
-                    if (sessionHandle.IsInvalid) throw new Exception("Invalid session handle.");
+                sessionHandle = new MonoUsbSessionHandle();
+                if (sessionHandle == null || sessionHandle.IsInvalid)
+                    throw new Exception("Invalid USB session handle.");
+
+                device_handle = MonoUsbApi.OpenDeviceWithVidPid(
+                    sessionHandle, MY_VID, MY_PID);
+
+                if (device_handle == null || device_handle.IsInvalid)
+                {
+                    releaseDataloggingDevice();
+                    return 1;
                 }
 
-                    //Debug.Log("Opening Device..");
-                    device_handle = MonoUsbApi.OpenDeviceWithVidPid(sessionHandle, MY_VID, MY_PID);
-                    if ((device_handle == null) || device_handle.IsInvalid) return 1;
+                // Configure and claim once per connection, not once per packet.
+                int result = MonoUsbApi.SetConfiguration(device_handle, MY_CONFIG);
+                if (result != 0)
+                {
+                    releaseDataloggingDevice();
+                    return result;
+                }
 
-                    //Optional: Reset the device and re-open
-                    MonoUsbApi.ResetDevice(device_handle);
-                    device_handle.Close();
-                    device_handle = MonoUsbApi.OpenDeviceWithVidPid(sessionHandle, MY_VID, MY_PID);
-                    if ((device_handle == null) || device_handle.IsInvalid) return 1;
+                result = MonoUsbApi.ClaimInterface(device_handle, MY_INTERFACE);
+                if (result != 0)
+                {
+                    releaseDataloggingDevice();
+                    return result;
+                }
 
+                interfaceClaimed = true;
+                Debug.Log("CANUSB connected.");
+                return 0;
             }
             catch (Exception e)
             {
-                Debug.Log("Something went wrong: Could not find device");
-                Console.WriteLine("{0} Exception caught.", e);
+                Debug.LogWarning("CANUSB connection failed: " + e.Message);
+                releaseDataloggingDevice();
                 return 1;
             }
-            return 0;
         }
 
-
-    public static int releaseDataloggingDevice()
+        public static int releaseDataloggingDevice()
         {
+            MonoUsbDeviceHandle oldDevice = device_handle;
+            MonoUsbSessionHandle oldSession = sessionHandle;
+
+            // Clear the public state first so no subsequent call reuses handles
+            // that are currently being torn down.
+            device_handle = null;
+            sessionHandle = null;
+
             try
             {
-
-                // Free and close resources
-                if (device_handle != null)
+                if (oldDevice != null)
                 {
-                    if (!device_handle.IsInvalid)
+                    if (!oldDevice.IsInvalid && interfaceClaimed)
                     {
-                        MonoUsbApi.ReleaseInterface(device_handle, MY_INTERFACE);
-                        device_handle.Close();
+                        try { MonoUsbApi.ReleaseInterface(oldDevice, MY_INTERFACE); }
+                        catch (Exception e) { Debug.LogWarning("CANUSB release interface: " + e.Message); }
                     }
-                }
-                if (sessionHandle != null)
-                {
-                    sessionHandle.Close();
-                    sessionHandle = null;
+
+                    interfaceClaimed = false;
+
+                    if (!oldDevice.IsClosed)
+                        oldDevice.Close();
                 }
             }
             catch (Exception e)
             {
-                Debug.Log("Something went wrong");
-                Console.WriteLine("{0} Exception caught.", e);
+                Debug.LogWarning("CANUSB device cleanup: " + e.Message);
+            }
+            finally
+            {
+                interfaceClaimed = false;
+            }
+
+            try
+            {
+                if (oldSession != null && !oldSession.IsClosed)
+                    oldSession.Close();
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("CANUSB session cleanup: " + e.Message);
                 return 1;
             }
+
             return 0;
         }
 
@@ -296,18 +353,9 @@ namespace integrationBoard
                 {
                     if ((device_handle == null) || device_handle.IsInvalid)
                     {
-                        if (getDataloggingDevice() > 0) { sessionHandle = null; device_handle = null; break; }
+                        if (getDataloggingDevice() > 0) { r = 1; break; }
                     }
 
-                    // Set configuration
-                    //Debug.Log("Set Config..");
-                    r = MonoUsbApi.SetConfiguration(device_handle, MY_CONFIG);
-                    if (r != 0) break;
-
-                    // Claim interface
-                    //Debug.Log("Set Interface..");
-                    r = MonoUsbApi.ClaimInterface(device_handle, MY_INTERFACE);
-                    if (r != 0) break;
 
                     /////////////////////
                     // REQUEST LOGDATA //
@@ -353,9 +401,8 @@ namespace integrationBoard
                     else if (r != (int)MonoUsbError.ErrorTimeout && r != 0)
                     {
                         // An error, other than ErrorTimeout was received. 
-                        Debug.Log("Write failed:" + r.ToString());
-                        device_handle = null;
-                        sessionHandle = null;
+                        Debug.LogWarning("Write failed: " + (MonoUsbError)r);
+                        releaseDataloggingDevice();
                         break;
                     }
 
@@ -394,8 +441,9 @@ namespace integrationBoard
                     }
                     else if (r != 0)
                     {
-                        // An error, other than ErrorTimeout was received. 
-                        Debug.Log("Read failed: " + (MonoUsbError)r);
+                        // An error, other than ErrorTimeout was received.
+                        Debug.LogWarning("Read failed: " + (MonoUsbError)r);
+                        releaseDataloggingDevice();
                     }
                     else
                     {
@@ -414,10 +462,8 @@ namespace integrationBoard
             }
             catch (Exception e)
             {
-                device_handle = null;
-                sessionHandle = null;
-                Debug.Log("Something went wrong");
-                Console.WriteLine("{0} Exception caught.", e);
+                releaseDataloggingDevice();
+                Debug.LogWarning("CANUSB operation failed: " + e.Message);
             }
             
 
