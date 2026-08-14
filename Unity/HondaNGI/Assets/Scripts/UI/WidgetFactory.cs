@@ -1,54 +1,10 @@
 using UnityEngine;
-
-public static class WidgetFactory
-{
-    public static IRuntimeWidget Create(
-        WidgetDefinition definition,
-        WidgetContext context)
-    {
-        if (definition == null)
-            return null;
-
-        switch (definition.type)
-        {
-            case "sensor":
-            {
-                SensorDefinition sensor = SensorRegistry.Get(definition.sensor);
-
-                if (sensor == null)
-                {
-                    Debug.LogError("Unknown sensor: " + definition.sensor);
-                    return null;
-                }
-
-                return new SensorWidget(
-                    sensor,
-                    definition.traceColor,
-                    context?.Styles
-                );
-            }
-
-            case "text":
-                return new TextWidget(definition.text);
-
-            case "panel":
-                return new PanelWidget(definition.text, definition.subtitle);
-
-            case "sensorTrace":
-                return new SensorTraceWidget(
-                    definition,
-                    context?.Styles
-                );
-
-            case "image":
-                return new ImageWidget(definition, context);
-
-            case "dashboardHeader":
-                return new DashboardHeaderWidget(context);
-
-            default:
-                Debug.LogWarning("Unsupported widget type: " + definition.type);
-                return null;
-        }
-    }
-}
+public static class WidgetFactory {
+ public static IRuntimeWidget Create(WidgetDefinition d,WidgetContext c){if(d==null)return null;switch(d.Type){
+ case"container":return new ContainerWidget();
+ case"sensor":{string id=d.PropString("sensor");var s=SensorRegistry.Get(id);if(s==null){Debug.LogError("Unknown sensor: "+id);return null;}return new SensorWidget(s,d.PropString("traceColor"),c?.Styles);}
+ case"text":return new TextWidget(d.PropString("text"));
+ case"panel":return new PanelWidget(d.PropString("text"),d.PropString("subtitle"));
+ case"sensorTrace":return new SensorTraceWidget(d,c?.Styles);
+ case"image":return new ImageWidget(d,c);
+ default:Debug.LogWarning("Unsupported widget type: "+d.Type);return null;}}}

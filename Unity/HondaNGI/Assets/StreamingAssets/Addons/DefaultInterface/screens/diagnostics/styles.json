@@ -77,7 +77,15 @@
       "style": {
         "marginRight": {
           "set": true,
-          "value": 12
+          "value": 18
+        },
+        "width": {
+          "set": true,
+          "value": 95
+        },
+        "height": {
+          "set": true,
+          "value": 78
         }
       }
     },

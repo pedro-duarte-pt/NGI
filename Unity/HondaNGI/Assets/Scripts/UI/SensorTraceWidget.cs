@@ -41,18 +41,18 @@ public sealed class SensorTraceWidget : IRuntimeWidget
     {
         this.styles = styles;
 
-        windowSeconds = definition.windowSeconds > 0f
-            ? definition.windowSeconds
+        windowSeconds = definition.PropFloat("windowSeconds") > 0f
+            ? definition.PropFloat("windowSeconds")
             : 10f;
 
-        maxTraces = definition.maxTraces > 0
-            ? definition.maxTraces
+        maxTraces = definition.PropInt("maxTraces") > 0
+            ? definition.PropInt("maxTraces")
             : 5;
 
-        BuildPalette(definition.traceColors);
+        BuildPalette(definition.PropStringArray("traceColors"));
 
         TraceSelection.MaxTraces = maxTraces;
-        TraceSelection.SetInitial(definition.sensors);
+        TraceSelection.SetInitial(definition.PropStringArray("sensors"));
 
         root = new VisualElement();
         root.AddToClassList("sensor-trace-widget");
