@@ -1,132 +1,39 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
-
 public sealed class AddonStyleResolver
 {
-    private readonly Dictionary<string, AddonStyleRuleDefinition> rules =
-        new Dictionary<string, AddonStyleRuleDefinition>(StringComparer.OrdinalIgnoreCase);
-
-    private readonly Dictionary<string, string> tokens =
-        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-    public AddonStyleResolver(AddonStyleSheetDefinition sheet)
-    {
-        if (sheet == null)
-            return;
-
-        if (sheet.tokens != null)
-        {
-            foreach (AddonStyleToken token in sheet.tokens)
-            {
-                if (token != null && !string.IsNullOrWhiteSpace(token.name))
-                    tokens[token.name] = token.value;
-            }
-        }
-
-        if (sheet.styles != null)
-        {
-            foreach (AddonStyleRuleDefinition rule in sheet.styles)
-            {
-                if (rule != null && !string.IsNullOrWhiteSpace(rule.name))
-                    rules[rule.name] = rule;
-            }
-        }
+    readonly Dictionary<string,AddonStyleRuleDefinition> rules=new(StringComparer.OrdinalIgnoreCase);
+    readonly Dictionary<string,string> tokens=new(StringComparer.OrdinalIgnoreCase);
+    public AddonStyleResolver(AddonStyleSheetDefinition sheet) {
+        if(sheet==null)return;
+        if(sheet.tokens!=null) foreach(var t in sheet.tokens) if(t!=null&&!string.IsNullOrWhiteSpace(t.name)) tokens[t.name]=t.value;
+        if(sheet.styles!=null) foreach(var r in sheet.styles) if(r!=null&&!string.IsNullOrWhiteSpace(r.name)) rules[r.name]=r;
     }
-
-    public AddonStyleProperties Resolve(
-        IEnumerable<string> styleNames,
-        IEnumerable<string> activeStates)
-    {
-        var result = new AddonStyleProperties();
-
-        if (styleNames == null)
-            return result;
-
-        var states = activeStates == null
-            ? new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-            : new HashSet<string>(activeStates, StringComparer.OrdinalIgnoreCase);
-
-        foreach (string styleName in styleNames)
-        {
-            if (!rules.TryGetValue(styleName, out AddonStyleRuleDefinition rule))
-                continue;
-
-            Merge(result, rule.style);
-
-            if (rule.states == null)
-                continue;
-
-            foreach (AddonStyleStateDefinition state in rule.states)
-            {
-                if (state != null &&
-                    !string.IsNullOrWhiteSpace(state.name) &&
-                    states.Contains(state.name))
-                {
-                    Merge(result, state.style);
-                }
-            }
+    public AddonStyleProperties Resolve(IEnumerable<string> names,IEnumerable<string> activeStates) {
+        var result=new AddonStyleProperties(); if(names==null)return result;
+        var states=activeStates==null?new HashSet<string>(StringComparer.OrdinalIgnoreCase):new HashSet<string>(activeStates,StringComparer.OrdinalIgnoreCase);
+        foreach(var n in names) if(rules.TryGetValue(n,out var r)) {
+            Merge(result,r.style);
+            if(r.states!=null) foreach(var s in r.states) if(s!=null&&!string.IsNullOrWhiteSpace(s.name)&&states.Contains(s.name)) Merge(result,s.style);
         }
-
-        ResolveTokens(result);
+        result.backgroundColor=Token(result.backgroundColor); result.color=Token(result.color); result.borderColor=Token(result.borderColor);
         return result;
     }
-
-    private void ResolveTokens(AddonStyleProperties style)
-    {
-        style.backgroundColor = ResolveToken(style.backgroundColor);
-        style.color = ResolveToken(style.color);
-        style.borderColor = ResolveToken(style.borderColor);
-    }
-
-    private string ResolveToken(string value)
-    {
-        if (string.IsNullOrWhiteSpace(value) || value[0] != '$')
-            return value;
-
-        string key = value.Substring(1);
-        return tokens.TryGetValue(key, out string resolved) ? resolved : value;
-    }
-
-    private static void Merge(AddonStyleProperties target, AddonStyleProperties source)
-    {
-        if (source == null)
-            return;
-
-        if (!string.IsNullOrWhiteSpace(source.backgroundColor)) target.backgroundColor = source.backgroundColor;
-        if (!string.IsNullOrWhiteSpace(source.color)) target.color = source.color;
-        if (source.fontSize != 0) target.fontSize = source.fontSize;
-        if (!string.IsNullOrWhiteSpace(source.fontWeight)) target.fontWeight = source.fontWeight;
-        if (!string.IsNullOrWhiteSpace(source.textAlign)) target.textAlign = source.textAlign;
-
-        if (source.width != 0) target.width = source.width;
-        if (source.height != 0) target.height = source.height;
-        if (source.minWidth != 0) target.minWidth = source.minWidth;
-        if (source.minHeight != 0) target.minHeight = source.minHeight;
-
-        if (source.paddingLeft != 0) target.paddingLeft = source.paddingLeft;
-        if (source.paddingRight != 0) target.paddingRight = source.paddingRight;
-        if (source.paddingTop != 0) target.paddingTop = source.paddingTop;
-        if (source.paddingBottom != 0) target.paddingBottom = source.paddingBottom;
-
-        if (source.marginLeft != 0) target.marginLeft = source.marginLeft;
-        if (source.marginRight != 0) target.marginRight = source.marginRight;
-        if (source.marginTop != 0) target.marginTop = source.marginTop;
-        if (source.marginBottom != 0) target.marginBottom = source.marginBottom;
-
-        if (!string.IsNullOrWhiteSpace(source.borderColor)) target.borderColor = source.borderColor;
-        if (source.borderWidth != 0) target.borderWidth = source.borderWidth;
-        if (source.borderRadius != 0) target.borderRadius = source.borderRadius;
-
-        if (!string.IsNullOrWhiteSpace(source.layoutDirection)) target.layoutDirection = source.layoutDirection;
-        if (!string.IsNullOrWhiteSpace(source.alignItems)) target.alignItems = source.alignItems;
-        if (!string.IsNullOrWhiteSpace(source.justifyContent)) target.justifyContent = source.justifyContent;
-        if (source.flexGrow != 0) target.flexGrow = source.flexGrow;
-
-        if (source.opacitySet)
-        {
-            target.opacitySet = true;
-            target.opacity = source.opacity;
-        }
+    string Token(string v){ if(string.IsNullOrWhiteSpace(v)||v[0]!='$')return v; return tokens.TryGetValue(v.Substring(1),out var x)?x:v; }
+    static void C(OptionalFloat s,ref OptionalFloat t){if(s!=null&&s.HasValue)t=OptionalFloat.Of(s.value);}
+    static void Merge(AddonStyleProperties t,AddonStyleProperties s){
+        if(s==null)return;
+        if(!string.IsNullOrWhiteSpace(s.backgroundColor))t.backgroundColor=s.backgroundColor;
+        if(!string.IsNullOrWhiteSpace(s.color))t.color=s.color; C(s.fontSize,ref t.fontSize);
+        if(!string.IsNullOrWhiteSpace(s.fontWeight))t.fontWeight=s.fontWeight;
+        if(!string.IsNullOrWhiteSpace(s.textAlign))t.textAlign=s.textAlign;
+        C(s.width,ref t.width);C(s.height,ref t.height);C(s.minWidth,ref t.minWidth);C(s.minHeight,ref t.minHeight);
+        C(s.paddingLeft,ref t.paddingLeft);C(s.paddingRight,ref t.paddingRight);C(s.paddingTop,ref t.paddingTop);C(s.paddingBottom,ref t.paddingBottom);
+        C(s.marginLeft,ref t.marginLeft);C(s.marginRight,ref t.marginRight);C(s.marginTop,ref t.marginTop);C(s.marginBottom,ref t.marginBottom);
+        if(!string.IsNullOrWhiteSpace(s.borderColor))t.borderColor=s.borderColor; C(s.borderWidth,ref t.borderWidth);C(s.borderRadius,ref t.borderRadius);
+        if(!string.IsNullOrWhiteSpace(s.layoutDirection))t.layoutDirection=s.layoutDirection;
+        if(!string.IsNullOrWhiteSpace(s.alignItems))t.alignItems=s.alignItems;
+        if(!string.IsNullOrWhiteSpace(s.justifyContent))t.justifyContent=s.justifyContent;
+        C(s.flexGrow,ref t.flexGrow);C(s.opacity,ref t.opacity);
     }
 }

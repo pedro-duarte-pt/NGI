@@ -1,178 +1,36 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-
-public static class AddonStyleApplier
-{
-    public static void Apply(VisualElement element, AddonStyleProperties style)
-    {
-        if (element == null || style == null)
-            return;
-
-        Reset(element);
-
-        if (TryColor(style.backgroundColor, out Color background))
-            element.style.backgroundColor = background;
-
-        if (TryColor(style.color, out Color foreground))
-            element.style.color = foreground;
-
-        if (style.fontSize > 0)
-            element.style.fontSize = style.fontSize;
-
-        if (!string.IsNullOrWhiteSpace(style.fontWeight))
-        {
-            element.style.unityFontStyleAndWeight =
-                style.fontWeight.Equals("bold", StringComparison.OrdinalIgnoreCase)
-                    ? FontStyle.Bold
-                    : FontStyle.Normal;
-        }
-
-        if (!string.IsNullOrWhiteSpace(style.textAlign))
-            element.style.unityTextAlign = ParseTextAnchor(style.textAlign);
-
-        if (style.width > 0) element.style.width = style.width;
-        if (style.height > 0) element.style.height = style.height;
-        if (style.minWidth > 0) element.style.minWidth = style.minWidth;
-        if (style.minHeight > 0) element.style.minHeight = style.minHeight;
-
-        if (style.paddingLeft != 0) element.style.paddingLeft = style.paddingLeft;
-        if (style.paddingRight != 0) element.style.paddingRight = style.paddingRight;
-        if (style.paddingTop != 0) element.style.paddingTop = style.paddingTop;
-        if (style.paddingBottom != 0) element.style.paddingBottom = style.paddingBottom;
-
-        if (style.marginLeft != 0) element.style.marginLeft = style.marginLeft;
-        if (style.marginRight != 0) element.style.marginRight = style.marginRight;
-        if (style.marginTop != 0) element.style.marginTop = style.marginTop;
-        if (style.marginBottom != 0) element.style.marginBottom = style.marginBottom;
-
-        if (TryColor(style.borderColor, out Color border))
-        {
-            element.style.borderLeftColor = border;
-            element.style.borderRightColor = border;
-            element.style.borderTopColor = border;
-            element.style.borderBottomColor = border;
-        }
-
-        if (style.borderWidth > 0)
-        {
-            element.style.borderLeftWidth = style.borderWidth;
-            element.style.borderRightWidth = style.borderWidth;
-            element.style.borderTopWidth = style.borderWidth;
-            element.style.borderBottomWidth = style.borderWidth;
-        }
-
-        if (style.borderRadius > 0)
-        {
-            element.style.borderTopLeftRadius = style.borderRadius;
-            element.style.borderTopRightRadius = style.borderRadius;
-            element.style.borderBottomLeftRadius = style.borderRadius;
-            element.style.borderBottomRightRadius = style.borderRadius;
-        }
-
-        if (!string.IsNullOrWhiteSpace(style.layoutDirection))
-        {
-            element.style.flexDirection =
-                style.layoutDirection.Equals("row", StringComparison.OrdinalIgnoreCase)
-                    ? FlexDirection.Row
-                    : FlexDirection.Column;
-        }
-
-        if (!string.IsNullOrWhiteSpace(style.alignItems))
-            element.style.alignItems = ParseAlign(style.alignItems);
-
-        if (!string.IsNullOrWhiteSpace(style.justifyContent))
-            element.style.justifyContent = ParseJustify(style.justifyContent);
-
-        if (style.flexGrow != 0)
-            element.style.flexGrow = style.flexGrow;
-
-        if (style.opacitySet)
-            element.style.opacity = style.opacity;
-    }
-
-    private static void Reset(VisualElement element)
-    {
-        element.style.backgroundColor = StyleKeyword.Null;
-        element.style.color = StyleKeyword.Null;
-        element.style.fontSize = StyleKeyword.Null;
-        element.style.unityFontStyleAndWeight = StyleKeyword.Null;
-        element.style.unityTextAlign = StyleKeyword.Null;
-
-        element.style.paddingLeft = StyleKeyword.Null;
-        element.style.paddingRight = StyleKeyword.Null;
-        element.style.paddingTop = StyleKeyword.Null;
-        element.style.paddingBottom = StyleKeyword.Null;
-
-        element.style.marginLeft = StyleKeyword.Null;
-        element.style.marginRight = StyleKeyword.Null;
-        element.style.marginTop = StyleKeyword.Null;
-        element.style.marginBottom = StyleKeyword.Null;
-
-        element.style.borderLeftColor = StyleKeyword.Null;
-        element.style.borderRightColor = StyleKeyword.Null;
-        element.style.borderTopColor = StyleKeyword.Null;
-        element.style.borderBottomColor = StyleKeyword.Null;
-
-        element.style.borderLeftWidth = StyleKeyword.Null;
-        element.style.borderRightWidth = StyleKeyword.Null;
-        element.style.borderTopWidth = StyleKeyword.Null;
-        element.style.borderBottomWidth = StyleKeyword.Null;
-
-        element.style.borderTopLeftRadius = StyleKeyword.Null;
-        element.style.borderTopRightRadius = StyleKeyword.Null;
-        element.style.borderBottomLeftRadius = StyleKeyword.Null;
-        element.style.borderBottomRightRadius = StyleKeyword.Null;
-
-        element.style.flexDirection = StyleKeyword.Null;
-        element.style.alignItems = StyleKeyword.Null;
-        element.style.justifyContent = StyleKeyword.Null;
-
-        element.style.opacity = StyleKeyword.Null;
-    }
-
-    private static bool TryColor(string value, out Color color)
-    {
-        color = default;
-        return !string.IsNullOrWhiteSpace(value) &&
-               ColorUtility.TryParseHtmlString(value.Trim(), out color);
-    }
-
-    private static Align ParseAlign(string value)
-    {
-        switch (value.Trim().ToLowerInvariant())
-        {
-            case "center": return Align.Center;
-            case "flex-end": return Align.FlexEnd;
-            case "stretch": return Align.Stretch;
-            default: return Align.FlexStart;
-        }
-    }
-
-    private static Justify ParseJustify(string value)
-    {
-        switch (value.Trim().ToLowerInvariant())
-        {
-            case "center": return Justify.Center;
-            case "flex-end": return Justify.FlexEnd;
-            case "space-between": return Justify.SpaceBetween;
-            default: return Justify.FlexStart;
-        }
-    }
-
-    private static TextAnchor ParseTextAnchor(string value)
-    {
-        switch (value.Trim().ToLowerInvariant())
-        {
-            case "upper-center": return TextAnchor.UpperCenter;
-            case "upper-right": return TextAnchor.UpperRight;
-            case "middle-left": return TextAnchor.MiddleLeft;
-            case "middle-center": return TextAnchor.MiddleCenter;
-            case "middle-right": return TextAnchor.MiddleRight;
-            case "lower-left": return TextAnchor.LowerLeft;
-            case "lower-center": return TextAnchor.LowerCenter;
-            case "lower-right": return TextAnchor.LowerRight;
-            default: return TextAnchor.UpperLeft;
-        }
-    }
+public static class AddonStyleApplier {
+ static bool H(OptionalFloat v)=>v!=null&&v.HasValue;
+ public static void Apply(VisualElement e,AddonStyleProperties s){
+  if(e==null||s==null)return; Reset(e);
+  if(ColorUtility.TryParseHtmlString(s.backgroundColor,out var bg))e.style.backgroundColor=bg;
+  if(ColorUtility.TryParseHtmlString(s.color,out var fg))e.style.color=fg;
+  if(H(s.fontSize))e.style.fontSize=s.fontSize.value;
+  if(!string.IsNullOrWhiteSpace(s.fontWeight))e.style.unityFontStyleAndWeight=s.fontWeight.Equals("bold",StringComparison.OrdinalIgnoreCase)?FontStyle.Bold:FontStyle.Normal;
+  if(!string.IsNullOrWhiteSpace(s.textAlign))e.style.unityTextAlign=TA(s.textAlign);
+  if(H(s.width))e.style.width=s.width.value;if(H(s.height))e.style.height=s.height.value;if(H(s.minWidth))e.style.minWidth=s.minWidth.value;if(H(s.minHeight))e.style.minHeight=s.minHeight.value;
+  if(H(s.paddingLeft))e.style.paddingLeft=s.paddingLeft.value;if(H(s.paddingRight))e.style.paddingRight=s.paddingRight.value;if(H(s.paddingTop))e.style.paddingTop=s.paddingTop.value;if(H(s.paddingBottom))e.style.paddingBottom=s.paddingBottom.value;
+  if(H(s.marginLeft))e.style.marginLeft=s.marginLeft.value;if(H(s.marginRight))e.style.marginRight=s.marginRight.value;if(H(s.marginTop))e.style.marginTop=s.marginTop.value;if(H(s.marginBottom))e.style.marginBottom=s.marginBottom.value;
+  if(ColorUtility.TryParseHtmlString(s.borderColor,out var bc)){e.style.borderLeftColor=bc;e.style.borderRightColor=bc;e.style.borderTopColor=bc;e.style.borderBottomColor=bc;}
+  if(H(s.borderWidth)){float v=s.borderWidth.value;e.style.borderLeftWidth=v;e.style.borderRightWidth=v;e.style.borderTopWidth=v;e.style.borderBottomWidth=v;}
+  if(H(s.borderRadius)){float v=s.borderRadius.value;e.style.borderTopLeftRadius=v;e.style.borderTopRightRadius=v;e.style.borderBottomLeftRadius=v;e.style.borderBottomRightRadius=v;}
+  if(!string.IsNullOrWhiteSpace(s.layoutDirection))e.style.flexDirection=s.layoutDirection.Equals("row",StringComparison.OrdinalIgnoreCase)?FlexDirection.Row:FlexDirection.Column;
+  if(!string.IsNullOrWhiteSpace(s.alignItems))e.style.alignItems=A(s.alignItems);if(!string.IsNullOrWhiteSpace(s.justifyContent))e.style.justifyContent=J(s.justifyContent);
+  if(H(s.flexGrow))e.style.flexGrow=s.flexGrow.value;if(H(s.opacity))e.style.opacity=s.opacity.value;
+ }
+ static void Reset(VisualElement e){
+  e.style.backgroundColor=StyleKeyword.Null;e.style.color=StyleKeyword.Null;e.style.fontSize=StyleKeyword.Null;e.style.unityFontStyleAndWeight=StyleKeyword.Null;e.style.unityTextAlign=StyleKeyword.Null;
+  e.style.paddingLeft=StyleKeyword.Null;e.style.paddingRight=StyleKeyword.Null;e.style.paddingTop=StyleKeyword.Null;e.style.paddingBottom=StyleKeyword.Null;
+  e.style.marginLeft=StyleKeyword.Null;e.style.marginRight=StyleKeyword.Null;e.style.marginTop=StyleKeyword.Null;e.style.marginBottom=StyleKeyword.Null;
+  e.style.borderLeftColor=StyleKeyword.Null;e.style.borderRightColor=StyleKeyword.Null;e.style.borderTopColor=StyleKeyword.Null;e.style.borderBottomColor=StyleKeyword.Null;
+  e.style.borderLeftWidth=StyleKeyword.Null;e.style.borderRightWidth=StyleKeyword.Null;e.style.borderTopWidth=StyleKeyword.Null;e.style.borderBottomWidth=StyleKeyword.Null;
+  e.style.borderTopLeftRadius=StyleKeyword.Null;e.style.borderTopRightRadius=StyleKeyword.Null;e.style.borderBottomLeftRadius=StyleKeyword.Null;e.style.borderBottomRightRadius=StyleKeyword.Null;
+  e.style.flexDirection=StyleKeyword.Null;e.style.alignItems=StyleKeyword.Null;e.style.justifyContent=StyleKeyword.Null;e.style.opacity=StyleKeyword.Null;
+  // Intentionally preserve width/height/minWidth/minHeight/flexGrow: current layout/runtime ownership.
+ }
+ static Align A(string v)=>v=="center"?Align.Center:v=="flex-end"?Align.FlexEnd:v=="stretch"?Align.Stretch:Align.FlexStart;
+ static Justify J(string v)=>v=="center"?Justify.Center:v=="flex-end"?Justify.FlexEnd:v=="space-between"?Justify.SpaceBetween:Justify.FlexStart;
+ static TextAnchor TA(string v){switch(v){case"upper-center":return TextAnchor.UpperCenter;case"upper-right":return TextAnchor.UpperRight;case"middle-left":return TextAnchor.MiddleLeft;case"middle-center":return TextAnchor.MiddleCenter;case"middle-right":return TextAnchor.MiddleRight;case"lower-left":return TextAnchor.LowerLeft;case"lower-center":return TextAnchor.LowerCenter;case"lower-right":return TextAnchor.LowerRight;default:return TextAnchor.UpperLeft;}}
 }

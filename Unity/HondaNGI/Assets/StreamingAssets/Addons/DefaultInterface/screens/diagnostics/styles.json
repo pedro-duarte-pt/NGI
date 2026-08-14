@@ -41,11 +41,26 @@
       "style": {
         "backgroundColor": "#050607",
         "borderColor": "$accent",
-        "borderWidth": 1,
-        "paddingLeft": 12,
-        "paddingRight": 12,
-        "paddingTop": 8,
-        "paddingBottom": 8,
+        "borderWidth": {
+          "set": true,
+          "value": 1
+        },
+        "paddingLeft": {
+          "set": true,
+          "value": 12
+        },
+        "paddingRight": {
+          "set": true,
+          "value": 12
+        },
+        "paddingTop": {
+          "set": true,
+          "value": 8
+        },
+        "paddingBottom": {
+          "set": true,
+          "value": 8
+        },
         "layoutDirection": "row",
         "alignItems": "center"
       }
@@ -60,7 +75,10 @@
     {
       "name": "dashboard-logo",
       "style": {
-        "marginRight": 12
+        "marginRight": {
+          "set": true,
+          "value": 12
+        }
       }
     },
     {
@@ -80,7 +98,10 @@
       "name": "dashboard-title",
       "style": {
         "color": "$textPrimary",
-        "fontSize": 19,
+        "fontSize": {
+          "set": true,
+          "value": 19
+        },
         "fontWeight": "bold"
       }
     },
@@ -88,7 +109,10 @@
       "name": "dashboard-subtitle",
       "style": {
         "color": "#B7B7B7",
-        "fontSize": 12
+        "fontSize": {
+          "set": true,
+          "value": 12
+        }
       }
     },
     {
@@ -96,12 +120,31 @@
       "style": {
         "backgroundColor": "$surface",
         "borderColor": "$border",
-        "borderWidth": 1,
-        "borderRadius": 8,
-        "paddingLeft": 10,
-        "paddingRight": 10,
-        "paddingTop": 7,
-        "paddingBottom": 7
+        "borderWidth": {
+          "set": true,
+          "value": 1
+        },
+        "borderRadius": {
+          "set": true,
+          "value": 8
+        },
+        "paddingLeft": {
+          "set": true,
+          "value": 10
+        },
+        "paddingRight": {
+          "set": true,
+          "value": 10
+        },
+        "paddingTop": {
+          "set": true,
+          "value": 7
+        },
+        "paddingBottom": {
+          "set": true,
+          "value": 7
+        },
+        "layoutDirection": "column"
       },
       "states": [
         {
@@ -109,7 +152,10 @@
           "style": {
             "backgroundColor": "$surfaceSelected",
             "borderColor": "$accent",
-            "borderWidth": 2
+            "borderWidth": {
+              "set": true,
+              "value": 2
+            }
           }
         }
       ]
@@ -126,21 +172,41 @@
       "name": "sensor-widget-name",
       "style": {
         "color": "$textPrimary",
-        "fontSize": 17,
+        "fontSize": {
+          "set": true,
+          "value": 17
+        },
         "fontWeight": "bold"
       }
     },
     {
       "name": "sensor-widget-selection-dash",
       "style": {
-        "borderRadius": 2
+        "width": {
+          "set": true,
+          "value": 28
+        },
+        "height": {
+          "set": true,
+          "value": 4
+        },
+        "borderRadius": {
+          "set": true,
+          "value": 2
+        },
+        "opacity": {
+          "set": true,
+          "value": 0.55
+        }
       },
       "states": [
         {
           "name": "selected",
           "style": {
-            "opacitySet": true,
-            "opacity": 1.0
+            "opacity": {
+              "set": true,
+              "value": 1
+            }
           }
         }
       ]
@@ -150,14 +216,24 @@
       "style": {
         "alignItems": "center",
         "justifyContent": "center",
-        "paddingTop": 10
+        "paddingTop": {
+          "set": true,
+          "value": 10
+        },
+        "flexGrow": {
+          "set": true,
+          "value": 1
+        }
       }
     },
     {
       "name": "sensor-widget-value",
       "style": {
         "color": "$textPrimary",
-        "fontSize": 35,
+        "fontSize": {
+          "set": true,
+          "value": 35
+        },
         "textAlign": "middle-center"
       }
     },
@@ -165,9 +241,15 @@
       "name": "sensor-widget-unit",
       "style": {
         "color": "$textSecondary",
-        "fontSize": 16,
+        "fontSize": {
+          "set": true,
+          "value": 16
+        },
         "textAlign": "middle-center",
-        "marginTop": -4
+        "marginTop": {
+          "set": true,
+          "value": -4
+        }
       }
     },
     {
@@ -175,12 +257,30 @@
       "style": {
         "backgroundColor": "#080A0C",
         "borderColor": "#393D41",
-        "borderWidth": 1,
-        "borderRadius": 9,
-        "paddingLeft": 12,
-        "paddingRight": 12,
-        "paddingTop": 10,
-        "paddingBottom": 10
+        "borderWidth": {
+          "set": true,
+          "value": 1
+        },
+        "borderRadius": {
+          "set": true,
+          "value": 9
+        },
+        "paddingLeft": {
+          "set": true,
+          "value": 12
+        },
+        "paddingRight": {
+          "set": true,
+          "value": 12
+        },
+        "paddingTop": {
+          "set": true,
+          "value": 10
+        },
+        "paddingBottom": {
+          "set": true,
+          "value": 10
+        }
       }
     },
     {
@@ -189,8 +289,14 @@
         "layoutDirection": "row",
         "alignItems": "center",
         "justifyContent": "center",
-        "paddingTop": 8,
-        "paddingBottom": 10
+        "paddingTop": {
+          "set": true,
+          "value": 8
+        },
+        "paddingBottom": {
+          "set": true,
+          "value": 10
+        }
       }
     },
     {
@@ -199,22 +305,37 @@
         "layoutDirection": "row",
         "alignItems": "center",
         "justifyContent": "center",
-        "marginLeft": 16,
-        "marginRight": 16
+        "marginLeft": {
+          "set": true,
+          "value": 16
+        },
+        "marginRight": {
+          "set": true,
+          "value": 16
+        }
       }
     },
     {
       "name": "sensor-trace-legend-dash",
       "style": {
-        "borderRadius": 1,
-        "marginRight": 9
+        "borderRadius": {
+          "set": true,
+          "value": 1
+        },
+        "marginRight": {
+          "set": true,
+          "value": 9
+        }
       }
     },
     {
       "name": "sensor-trace-legend-text",
       "style": {
         "color": "$textPrimary",
-        "fontSize": 19,
+        "fontSize": {
+          "set": true,
+          "value": 19
+        },
         "fontWeight": "bold"
       }
     },
@@ -222,7 +343,10 @@
       "name": "sensor-trace-legend-empty",
       "style": {
         "color": "$textPrimary",
-        "fontSize": 18,
+        "fontSize": {
+          "set": true,
+          "value": 18
+        },
         "fontWeight": "bold"
       }
     },
@@ -231,8 +355,14 @@
       "style": {
         "backgroundColor": "#06080A",
         "borderColor": "#272B2F",
-        "borderWidth": 1,
-        "borderRadius": 6
+        "borderWidth": {
+          "set": true,
+          "value": 1
+        },
+        "borderRadius": {
+          "set": true,
+          "value": 6
+        }
       }
     },
     {
@@ -241,7 +371,10 @@
         "layoutDirection": "row",
         "alignItems": "center",
         "justifyContent": "center",
-        "marginTop": 10
+        "marginTop": {
+          "set": true,
+          "value": 10
+        }
       }
     },
     {
@@ -256,24 +389,54 @@
       "style": {
         "backgroundColor": "#101214",
         "color": "$textPrimary",
-        "fontSize": 15,
+        "fontSize": {
+          "set": true,
+          "value": 15
+        },
         "fontWeight": "bold",
         "borderColor": "#34383C",
-        "borderWidth": 1,
-        "borderRadius": 7,
-        "paddingLeft": 22,
-        "paddingRight": 22,
-        "paddingTop": 14,
-        "paddingBottom": 14,
-        "marginLeft": 4,
-        "marginRight": 4
+        "borderWidth": {
+          "set": true,
+          "value": 1
+        },
+        "borderRadius": {
+          "set": true,
+          "value": 7
+        },
+        "paddingLeft": {
+          "set": true,
+          "value": 22
+        },
+        "paddingRight": {
+          "set": true,
+          "value": 22
+        },
+        "paddingTop": {
+          "set": true,
+          "value": 14
+        },
+        "paddingBottom": {
+          "set": true,
+          "value": 14
+        },
+        "marginLeft": {
+          "set": true,
+          "value": 4
+        },
+        "marginRight": {
+          "set": true,
+          "value": 4
+        }
       },
       "states": [
         {
           "name": "active",
           "style": {
             "borderColor": "#F01818",
-            "borderWidth": 2
+            "borderWidth": {
+              "set": true,
+              "value": 2
+            }
           }
         }
       ]
@@ -282,7 +445,10 @@
       "name": "sensor-trace-reset-button",
       "style": {
         "borderColor": "$accent",
-        "marginLeft": 14
+        "marginLeft": {
+          "set": true,
+          "value": 14
+        }
       }
     }
   ]
