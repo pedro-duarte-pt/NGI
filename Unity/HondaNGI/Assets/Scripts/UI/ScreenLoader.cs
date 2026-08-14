@@ -11,7 +11,7 @@ public class ScreenLoader : MonoBehaviour
     public ScreenDefinition CurrentScreen { get; private set; }
 
     private readonly List<IRuntimeWidget> runtimeWidgets = new List<IRuntimeWidget>();
-    private readonly ExternalStyleLoader styleLoader = new ExternalStyleLoader();
+    private readonly AddonStyleRuntime styleRuntime = new AddonStyleRuntime();
 
     private VisualElement documentRoot;
     private VisualElement currentScreenContainer;
@@ -92,7 +92,7 @@ public class ScreenLoader : MonoBehaviour
             ? null
             : Path.Combine(screenFolder, CurrentScreen.style);
 
-        if (!styleLoader.Load(stylePath))
+        if (!styleRuntime.Load(stylePath))
             Debug.LogWarning("Screen will continue without external styles.");
 
         BuildScreen(addonId, addonRoot);
@@ -127,7 +127,7 @@ public class ScreenLoader : MonoBehaviour
         var context = new WidgetContext
         {
             AddonRootPath = addonRoot,
-            RefreshStyle = styleLoader.RefreshElement
+            Styles = styleRuntime
         };
 
         foreach (WidgetDefinition definition in CurrentScreen.widgets)
@@ -147,7 +147,7 @@ public class ScreenLoader : MonoBehaviour
             runtimeWidgets.Add(widget);
         }
 
-        styleLoader.ApplyRecursive(currentScreenContainer);
+        styleRuntime.ApplyRecursive(currentScreenContainer);
     }
 
     private static void ApplyLayout(VisualElement element, WidgetDefinition definition)

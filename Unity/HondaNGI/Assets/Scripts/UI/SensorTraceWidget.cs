@@ -22,7 +22,7 @@ public sealed class SensorTraceWidget : IRuntimeWidget
     private readonly VisualElement legendContainer;
     private readonly VisualElement windowButtons;
     private readonly VisualElement axisOverlay;
-    private readonly Action<VisualElement> refreshStyle;
+    private readonly AddonStyleRuntime styles;
 
     private readonly Dictionary<string, TraceData> traces =
         new Dictionary<string, TraceData>(StringComparer.OrdinalIgnoreCase);
@@ -37,9 +37,9 @@ public sealed class SensorTraceWidget : IRuntimeWidget
 
     public SensorTraceWidget(
         WidgetDefinition definition,
-        Action<VisualElement> refreshStyle = null)
+        AddonStyleRuntime styles = null)
     {
-        this.refreshStyle = refreshStyle;
+        this.styles = styles;
 
         windowSeconds = definition.windowSeconds > 0f
             ? definition.windowSeconds
@@ -218,33 +218,16 @@ public sealed class SensorTraceWidget : IRuntimeWidget
 
 private void UpdateWindowButtons()
 {
-    // First make every window button inactive
     foreach (VisualElement child in windowButtons.Children())
-    {
-        child.RemoveFromClassList(
-            "sensor-trace-window-button-active"
-        );
+        styles?.SetState(child, "active", false);
 
-        // Important: remove the inline style that belonged
-        // to the previous active state and reapply base style.
-        refreshStyle?.Invoke(child);
-    }
-
-    // Find the currently selected window
     VisualElement active =
         windowButtons.Q<VisualElement>(
             "window-" + windowSeconds.ToString("0")
         );
 
     if (active != null)
-    {
-        active.AddToClassList(
-            "sensor-trace-window-button-active"
-        );
-
-        // Reapply style now that active class is present.
-        refreshStyle?.Invoke(active);
-    }
+        styles?.SetState(active, "active", true);
 }
 
     private void ResetTrace()
@@ -264,7 +247,7 @@ private void UpdateWindowButtons()
             var empty = new Label("SELECT A SENSOR");
             empty.AddToClassList("sensor-trace-legend-empty");
             legendContainer.Add(empty);
-            refreshStyle?.Invoke(empty);
+            styles?.ApplyElement(empty);
             return;
         }
 
@@ -296,9 +279,9 @@ private void UpdateWindowButtons()
             item.Add(text);
             legendContainer.Add(item);
 
-            refreshStyle?.Invoke(item);
-            refreshStyle?.Invoke(dash);
-            refreshStyle?.Invoke(text);
+            styles?.ApplyElement(item);
+            styles?.ApplyElement(dash);
+            styles?.ApplyElement(text);
 
             dash.style.backgroundColor = palette[index % palette.Count];
             dash.style.width = 34;
@@ -307,7 +290,7 @@ private void UpdateWindowButtons()
             index++;
         }
 
-        refreshStyle?.Invoke(legendContainer);
+        styles?.ApplyElement(legendContainer);
     }
 
     private void DrawGraph(MeshGenerationContext context)

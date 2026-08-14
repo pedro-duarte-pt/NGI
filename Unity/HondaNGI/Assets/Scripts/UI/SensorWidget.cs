@@ -1,11 +1,10 @@
-using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public sealed class SensorWidget : IRuntimeWidget
 {
     private readonly SensorDefinition sensor;
-    private readonly Action<VisualElement> refreshStyle;
+    private readonly AddonStyleRuntime styles;
     private readonly VisualElement root;
     private readonly Label valueLabel;
     private readonly Label unitLabel;
@@ -18,10 +17,10 @@ public sealed class SensorWidget : IRuntimeWidget
     public SensorWidget(
         SensorDefinition sensor,
         string traceColor,
-        Action<VisualElement> refreshStyle = null)
+        AddonStyleRuntime styles = null)
     {
         this.sensor = sensor;
-        this.refreshStyle = refreshStyle;
+        this.styles = styles;
 
         sensorColor = new Color(0.95f, 0.12f, 0.12f);
 
@@ -90,12 +89,7 @@ public sealed class SensorWidget : IRuntimeWidget
     {
         bool selected = TraceSelection.IsSelected(sensor.Id);
 
-        if (selected)
-            root.AddToClassList("sensor-widget-selected");
-        else
-            root.RemoveFromClassList("sensor-widget-selected");
-
-        selectionDash.style.opacity = selected ? 1f : 0.55f;
-        refreshStyle?.Invoke(root);
+        styles?.SetState(root, "selected", selected);
+        styles?.SetState(selectionDash, "selected", selected);
     }
 }

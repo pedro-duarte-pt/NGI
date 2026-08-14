@@ -24,7 +24,7 @@ public static class WidgetFactory
                 return new SensorWidget(
                     sensor,
                     definition.traceColor,
-                    context?.RefreshStyle
+                    context?.Styles
                 );
             }
 
@@ -37,7 +37,7 @@ public static class WidgetFactory
             case "sensorTrace":
                 return new SensorTraceWidget(
                     definition,
-                    context?.RefreshStyle
+                    context?.Styles
                 );
 
             case "image":

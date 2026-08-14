@@ -1,38 +1,289 @@
 {
-  "rules": [
-    { "selector": "screen-root", "backgroundColor": "#060708" },
-
-    { "selector": "dashboard-header", "backgroundColor": "#050607", "borderColor": "#E01919", "borderWidth": 1, "paddingLeft": 12, "paddingRight": 12, "paddingTop": 8, "paddingBottom": 8, "flexDirection": "row", "alignItems": "center" },
-    { "selector": "dashboard-brand", "flexDirection": "row", "alignItems": "center" },
-    { "selector": "dashboard-logo", "marginRight": 12 },
-    { "selector": "image-widget-image", "alignItems": "center", "justifyContent": "center" },
-    { "selector": "dashboard-title-block", "justifyContent": "center" },
-    { "selector": "dashboard-title", "color": "#FFFFFF", "fontSize": 19, "bold": true },
-    { "selector": "dashboard-subtitle", "color": "#B7B7B7", "fontSize": 12 },
-
-    { "selector": "sensor-widget", "backgroundColor": "#090B0D", "borderColor": "#3A3E42", "borderWidth": 1, "borderRadius": 8, "paddingLeft": 10, "paddingRight": 10, "paddingTop": 7, "paddingBottom": 7 },
-    { "selector": "sensor-widget-header", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" },
-    { "selector": "sensor-widget-name", "color": "#FFFFFF", "fontSize": 17, "bold": true },
-    { "selector": "sensor-widget-selection-dash", "borderRadius": 2 },
-    { "selector": "sensor-widget-value-area", "alignItems": "center", "justifyContent": "center", "paddingTop": 10 },
-    { "selector": "sensor-widget-value", "color": "#FFFFFF", "fontSize": 35, "textAlign": "middle-center" },
-    { "selector": "sensor-widget-unit", "color": "#D5D5D5", "fontSize": 16, "textAlign": "middle-center", "marginTop": -4 },
-    { "selector": "sensor-widget-selected", "backgroundColor": "#0D090A", "borderColor": "#E01919", "borderWidth": 2 },
-
-    { "selector": "sensor-trace-widget", "backgroundColor": "#080A0C", "borderColor": "#393D41", "borderWidth": 1, "borderRadius": 9, "paddingLeft": 12, "paddingRight": 12, "paddingTop": 10, "paddingBottom": 10 },
-
-    { "selector": "sensor-trace-legend", "flexDirection": "row", "alignItems": "center", "justifyContent": "center", "paddingTop": 8, "paddingBottom": 10 },
-    { "selector": "sensor-trace-legend-item", "flexDirection": "row", "alignItems": "center", "justifyContent": "center", "marginLeft": 16, "marginRight": 16 },
-    { "selector": "sensor-trace-legend-dash", "borderRadius": 1, "marginRight": 9 },
-    { "selector": "sensor-trace-legend-text", "color": "#FFFFFF", "fontSize": 19, "bold": true },
-    { "selector": "sensor-trace-legend-empty", "color": "#FFFFFF", "fontSize": 18, "bold": true },
-
-    { "selector": "sensor-trace-graph", "backgroundColor": "#06080A", "borderColor": "#272B2F", "borderWidth": 1, "borderRadius": 6 },
-
-    { "selector": "sensor-trace-bottom-controls", "flexDirection": "row", "alignItems": "center", "justifyContent": "center", "marginTop": 10 },
-    { "selector": "sensor-trace-window-buttons", "flexDirection": "row", "alignItems": "center" },
-    { "selector": "sensor-trace-window-button", "backgroundColor": "#101214", "color": "#FFFFFF", "fontSize": 15, "bold": true, "borderColor": "#34383C", "borderWidth": 1, "borderRadius": 7, "paddingLeft": 22, "paddingRight": 22, "paddingTop": 14, "paddingBottom": 14, "marginLeft": 4, "marginRight": 4 },
-    { "selector": "sensor-trace-window-button-active", "borderColor": "#F01818", "borderWidth": 2 },
-    { "selector": "sensor-trace-reset-button", "borderColor": "#E01919", "marginLeft": 14 }
+  "tokens": [
+    {
+      "name": "background",
+      "value": "#060708"
+    },
+    {
+      "name": "surface",
+      "value": "#090B0D"
+    },
+    {
+      "name": "surfaceSelected",
+      "value": "#0D090A"
+    },
+    {
+      "name": "textPrimary",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "textSecondary",
+      "value": "#D5D5D5"
+    },
+    {
+      "name": "accent",
+      "value": "#E01919"
+    },
+    {
+      "name": "border",
+      "value": "#3A3E42"
+    }
+  ],
+  "styles": [
+    {
+      "name": "screen-root",
+      "style": {
+        "backgroundColor": "$background"
+      }
+    },
+    {
+      "name": "dashboard-header",
+      "style": {
+        "backgroundColor": "#050607",
+        "borderColor": "$accent",
+        "borderWidth": 1,
+        "paddingLeft": 12,
+        "paddingRight": 12,
+        "paddingTop": 8,
+        "paddingBottom": 8,
+        "layoutDirection": "row",
+        "alignItems": "center"
+      }
+    },
+    {
+      "name": "dashboard-brand",
+      "style": {
+        "layoutDirection": "row",
+        "alignItems": "center"
+      }
+    },
+    {
+      "name": "dashboard-logo",
+      "style": {
+        "marginRight": 12
+      }
+    },
+    {
+      "name": "image-widget-image",
+      "style": {
+        "alignItems": "center",
+        "justifyContent": "center"
+      }
+    },
+    {
+      "name": "dashboard-title-block",
+      "style": {
+        "justifyContent": "center"
+      }
+    },
+    {
+      "name": "dashboard-title",
+      "style": {
+        "color": "$textPrimary",
+        "fontSize": 19,
+        "fontWeight": "bold"
+      }
+    },
+    {
+      "name": "dashboard-subtitle",
+      "style": {
+        "color": "#B7B7B7",
+        "fontSize": 12
+      }
+    },
+    {
+      "name": "sensor-widget",
+      "style": {
+        "backgroundColor": "$surface",
+        "borderColor": "$border",
+        "borderWidth": 1,
+        "borderRadius": 8,
+        "paddingLeft": 10,
+        "paddingRight": 10,
+        "paddingTop": 7,
+        "paddingBottom": 7
+      },
+      "states": [
+        {
+          "name": "selected",
+          "style": {
+            "backgroundColor": "$surfaceSelected",
+            "borderColor": "$accent",
+            "borderWidth": 2
+          }
+        }
+      ]
+    },
+    {
+      "name": "sensor-widget-header",
+      "style": {
+        "layoutDirection": "row",
+        "justifyContent": "space-between",
+        "alignItems": "center"
+      }
+    },
+    {
+      "name": "sensor-widget-name",
+      "style": {
+        "color": "$textPrimary",
+        "fontSize": 17,
+        "fontWeight": "bold"
+      }
+    },
+    {
+      "name": "sensor-widget-selection-dash",
+      "style": {
+        "borderRadius": 2
+      },
+      "states": [
+        {
+          "name": "selected",
+          "style": {
+            "opacitySet": true,
+            "opacity": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "name": "sensor-widget-value-area",
+      "style": {
+        "alignItems": "center",
+        "justifyContent": "center",
+        "paddingTop": 10
+      }
+    },
+    {
+      "name": "sensor-widget-value",
+      "style": {
+        "color": "$textPrimary",
+        "fontSize": 35,
+        "textAlign": "middle-center"
+      }
+    },
+    {
+      "name": "sensor-widget-unit",
+      "style": {
+        "color": "$textSecondary",
+        "fontSize": 16,
+        "textAlign": "middle-center",
+        "marginTop": -4
+      }
+    },
+    {
+      "name": "sensor-trace-widget",
+      "style": {
+        "backgroundColor": "#080A0C",
+        "borderColor": "#393D41",
+        "borderWidth": 1,
+        "borderRadius": 9,
+        "paddingLeft": 12,
+        "paddingRight": 12,
+        "paddingTop": 10,
+        "paddingBottom": 10
+      }
+    },
+    {
+      "name": "sensor-trace-legend",
+      "style": {
+        "layoutDirection": "row",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "paddingTop": 8,
+        "paddingBottom": 10
+      }
+    },
+    {
+      "name": "sensor-trace-legend-item",
+      "style": {
+        "layoutDirection": "row",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "marginLeft": 16,
+        "marginRight": 16
+      }
+    },
+    {
+      "name": "sensor-trace-legend-dash",
+      "style": {
+        "borderRadius": 1,
+        "marginRight": 9
+      }
+    },
+    {
+      "name": "sensor-trace-legend-text",
+      "style": {
+        "color": "$textPrimary",
+        "fontSize": 19,
+        "fontWeight": "bold"
+      }
+    },
+    {
+      "name": "sensor-trace-legend-empty",
+      "style": {
+        "color": "$textPrimary",
+        "fontSize": 18,
+        "fontWeight": "bold"
+      }
+    },
+    {
+      "name": "sensor-trace-graph",
+      "style": {
+        "backgroundColor": "#06080A",
+        "borderColor": "#272B2F",
+        "borderWidth": 1,
+        "borderRadius": 6
+      }
+    },
+    {
+      "name": "sensor-trace-bottom-controls",
+      "style": {
+        "layoutDirection": "row",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "marginTop": 10
+      }
+    },
+    {
+      "name": "sensor-trace-window-buttons",
+      "style": {
+        "layoutDirection": "row",
+        "alignItems": "center"
+      }
+    },
+    {
+      "name": "sensor-trace-window-button",
+      "style": {
+        "backgroundColor": "#101214",
+        "color": "$textPrimary",
+        "fontSize": 15,
+        "fontWeight": "bold",
+        "borderColor": "#34383C",
+        "borderWidth": 1,
+        "borderRadius": 7,
+        "paddingLeft": 22,
+        "paddingRight": 22,
+        "paddingTop": 14,
+        "paddingBottom": 14,
+        "marginLeft": 4,
+        "marginRight": 4
+      },
+      "states": [
+        {
+          "name": "active",
+          "style": {
+            "borderColor": "#F01818",
+            "borderWidth": 2
+          }
+        }
+      ]
+    },
+    {
+      "name": "sensor-trace-reset-button",
+      "style": {
+        "borderColor": "$accent",
+        "marginLeft": 14
+      }
+    }
   ]
 }
