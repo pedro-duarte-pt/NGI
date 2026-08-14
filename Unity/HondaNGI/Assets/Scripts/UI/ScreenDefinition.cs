@@ -1,15 +1,139 @@
-using System; using System.Collections.Generic; using System.Globalization;
-public sealed class ScreenDefinition {
- public string Id,Title,Style; public IReadOnlyList<WidgetDefinition> Widgets;
- public static ScreenDefinition FromJson(string json){var r=AddonJson.Obj(AddonJson.Parse(json));if(r==null)return null;return new ScreenDefinition{Id=AddonJson.Str(r,"id"),Title=AddonJson.Str(r,"title"),Style=AddonJson.Str(r,"style"),Widgets=WidgetDefinition.List(r.TryGetValue("widgets",out var w)?w:null)};}
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+
+public sealed class ScreenDefinition
+{
+    public string Id, Title, Style;
+    public ScreenLayoutDefinition Layout;
+    public IReadOnlyList<WidgetDefinition> Widgets;
+
+    public static ScreenDefinition FromJson(string json)
+    {
+        var root = AddonJson.Obj(AddonJson.Parse(json));
+        if (root == null) return null;
+
+        return new ScreenDefinition
+        {
+            Id = AddonJson.Str(root, "id"),
+            Title = AddonJson.Str(root, "title"),
+            Style = AddonJson.Str(root, "style"),
+            Layout = ScreenLayoutDefinition.From(
+                root.TryGetValue("layout", out object l) ? AddonJson.Obj(l) : null),
+            Widgets = WidgetDefinition.List(
+                root.TryGetValue("widgets", out object w) ? w : null)
+        };
+    }
 }
-public sealed class WidgetDefinition {
- public string Type,Id,StyleClass; public WidgetLayout Layout; public IReadOnlyDictionary<string,object> Props; public IReadOnlyList<WidgetDefinition> Children;
- public static WidgetDefinition From(Dictionary<string,object> o){if(o==null)return null;return new WidgetDefinition{Type=AddonJson.Str(o,"type"),Id=AddonJson.Str(o,"id"),StyleClass=AddonJson.Str(o,"styleClass"),Layout=WidgetLayout.From(o.TryGetValue("layout",out var l)?AddonJson.Obj(l):null),Props=o.TryGetValue("props",out var p)?AddonJson.Obj(p)??new Dictionary<string,object>():new Dictionary<string,object>(),Children=List(o.TryGetValue("children",out var c)?c:null)};}
- public static IReadOnlyList<WidgetDefinition> List(object raw){var a=AddonJson.Arr(raw);var r=new List<WidgetDefinition>();if(a!=null)foreach(var x in a){var n=From(AddonJson.Obj(x));if(n!=null)r.Add(n);}return r;}
- public string PropString(string k,string f="")=>Props!=null&&Props.TryGetValue(k,out var v)&&v!=null?Convert.ToString(v,CultureInfo.InvariantCulture):f;
- public float PropFloat(string k,float f=0){try{return Props!=null&&Props.TryGetValue(k,out var v)?Convert.ToSingle(v,CultureInfo.InvariantCulture):f;}catch{return f;}}
- public int PropInt(string k,int f=0){try{return Props!=null&&Props.TryGetValue(k,out var v)?Convert.ToInt32(v,CultureInfo.InvariantCulture):f;}catch{return f;}}
- public string[] PropStringArray(string k){if(Props==null||!Props.TryGetValue(k,out var v))return null;var a=AddonJson.Arr(v);if(a==null)return null;var r=new string[a.Count];for(int i=0;i<a.Count;i++)r[i]=Convert.ToString(a[i],CultureInfo.InvariantCulture);return r;}
+
+public sealed class ScreenLayoutDefinition
+{
+    public string Type = "grid";
+    public int Columns = 10;
+    public int Rows = 7;
+    public float Gap = 12f;
+    public float Padding = 0f;
+
+    public static ScreenLayoutDefinition From(Dictionary<string, object> obj)
+    {
+        var result = new ScreenLayoutDefinition();
+        if (obj == null) return result;
+
+        result.Type = AddonJson.Str(obj, "type", "grid");
+        result.Columns = Math.Max(1, AddonJson.Int(obj, "columns", 10));
+        result.Rows = Math.Max(1, AddonJson.Int(obj, "rows", 7));
+        result.Gap = Float(obj, "gap", 12f);
+        result.Padding = Float(obj, "padding", 0f);
+        return result;
+    }
+
+    private static float Float(Dictionary<string, object> obj, string key, float fallback)
+    {
+        if (!obj.TryGetValue(key, out object value) || value == null) return fallback;
+        try { return Convert.ToSingle(value, CultureInfo.InvariantCulture); }
+        catch { return fallback; }
+    }
 }
-public sealed class WidgetLayout { public int X,Y,Width=1,Height=1; public static WidgetLayout From(Dictionary<string,object> o)=>o==null?null:new WidgetLayout{X=AddonJson.Int(o,"x"),Y=AddonJson.Int(o,"y"),Width=AddonJson.Int(o,"width",1),Height=AddonJson.Int(o,"height",1)}; }
+
+public sealed class WidgetDefinition
+{
+    public string Type, Id, StyleClass;
+    public WidgetLayout Layout;
+    public IReadOnlyDictionary<string, object> Props;
+    public IReadOnlyList<WidgetDefinition> Children;
+
+    public static WidgetDefinition From(Dictionary<string, object> obj)
+    {
+        if (obj == null) return null;
+
+        return new WidgetDefinition
+        {
+            Type = AddonJson.Str(obj, "type"),
+            Id = AddonJson.Str(obj, "id"),
+            StyleClass = AddonJson.Str(obj, "styleClass"),
+            Layout = WidgetLayout.From(
+                obj.TryGetValue("layout", out object l) ? AddonJson.Obj(l) : null),
+            Props = obj.TryGetValue("props", out object p)
+                ? AddonJson.Obj(p) ?? new Dictionary<string, object>()
+                : new Dictionary<string, object>(),
+            Children = List(
+                obj.TryGetValue("children", out object c) ? c : null)
+        };
+    }
+
+    public static IReadOnlyList<WidgetDefinition> List(object raw)
+    {
+        var array = AddonJson.Arr(raw);
+        var result = new List<WidgetDefinition>();
+        if (array == null) return result;
+
+        foreach (object item in array)
+        {
+            WidgetDefinition node = From(AddonJson.Obj(item));
+            if (node != null) result.Add(node);
+        }
+        return result;
+    }
+
+    public string PropString(string key, string fallback = "") =>
+        Props != null && Props.TryGetValue(key, out object v) && v != null
+            ? Convert.ToString(v, CultureInfo.InvariantCulture) : fallback;
+
+    public float PropFloat(string key, float fallback = 0f)
+    {
+        try { return Props != null && Props.TryGetValue(key, out object v) ? Convert.ToSingle(v, CultureInfo.InvariantCulture) : fallback; }
+        catch { return fallback; }
+    }
+
+    public int PropInt(string key, int fallback = 0)
+    {
+        try { return Props != null && Props.TryGetValue(key, out object v) ? Convert.ToInt32(v, CultureInfo.InvariantCulture) : fallback; }
+        catch { return fallback; }
+    }
+
+    public string[] PropStringArray(string key)
+    {
+        if (Props == null || !Props.TryGetValue(key, out object v)) return null;
+        var array = AddonJson.Arr(v);
+        if (array == null) return null;
+
+        var result = new string[array.Count];
+        for (int i = 0; i < array.Count; i++)
+            result[i] = Convert.ToString(array[i], CultureInfo.InvariantCulture);
+        return result;
+    }
+}
+
+public sealed class WidgetLayout
+{
+    public int X, Y, Width = 1, Height = 1;
+
+    public static WidgetLayout From(Dictionary<string, object> obj) =>
+        obj == null ? null : new WidgetLayout
+        {
+            X = AddonJson.Int(obj, "x"),
+            Y = AddonJson.Int(obj, "y"),
+            Width = Math.Max(1, AddonJson.Int(obj, "width", 1)),
+            Height = Math.Max(1, AddonJson.Int(obj, "height", 1))
+        };
+}

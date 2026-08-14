@@ -2,6 +2,13 @@
   "id": "diagnostics",
   "title": "Sensor Diagnostics",
   "style": "styles.json",
+  "layout": {
+    "type": "grid",
+    "columns": 10,
+    "rows": 7,
+    "gap": 12,
+    "padding": 0
+  },
   "widgets": [
     {
       "type": "container",
