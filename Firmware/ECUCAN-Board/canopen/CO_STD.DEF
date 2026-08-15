@@ -51,11 +51,11 @@
 			{0x6000,0x24,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_VTP]}},		\
 			{0x6000,0x25,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_AC]}},		\
 			{0x6000,0x26,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_BRAKE]}},      \
-			{0x6000,0x27,_RW,8,{(const unsigned char *)&totalx10m}},      \
-			{0x6000,0x28,_RW,8,{(const unsigned char *)(&totalx10m) + 1}},      \
-			{0x6000,0x29,_RW,8,{(const unsigned char *)(&totalx10m) + 2}}
+			{0x6000,0x27,_RW,8,{(const unsigned char *)&odometerX100m}},      \
+			{0x6000,0x28,_RW,8,{(const unsigned char *)(&odometerX100m) + 1}},      \
+			{0x6000,0x29,_RW,8,{(const unsigned char *)(&odometerX100m) + 2}}
 
-//need to test the &totalx10m offset entres
+//need to test the &odometerX100m offset entres
 
 /*********************************************************************
  * This memory region defines standard objects. All the 

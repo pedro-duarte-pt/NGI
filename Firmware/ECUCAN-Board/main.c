@@ -92,20 +92,6 @@ void enableInterrupts() {
 void __interrupt() checkInterrupts(void) {
     char rcbuf;
 
-    //200 us timer interrupt for VSS and fuel consumption calc
-    if (TMR2IE && TMR2IF) {
-        TMR2IF = 0;
-        
-        //TMR2 = 105;     //Defined manually to reduce error. TODO: Have to understand the error!!
-        TMR2 = TMR2_load; 
-        
-        INJ_sampling_interval = INJ_sampling_interval+1;
-        if (VSS_sampling_interval>0) {
-            VSS_sampling_interval = VSS_sampling_interval+1;
-            msCOUNTER = msCOUNTER +1;
-        }
-    }   
-    
     //1 second timer interrupt for led blinking; ECU status check and macroevent
     if (TMR0IE && TMR0IF) {
         TMR0IF = 0;

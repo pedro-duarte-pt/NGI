@@ -2,7 +2,6 @@
  #include <xc.h>           
 #endif   
 
-#include "eeprom.h"
 #include "timers.h"
 #include "system.h"
 #include "dlog.h"
@@ -17,21 +16,12 @@ unsigned char fetch_watchdog = 0;
 unsigned char dataIndex = _SENSOR_ENTRY_MAX;
 //increments every datalogging period (Default=40ms), resets after reaching 10
 unsigned char timeSlice;
-//increments by 1 with every 200 microseconds
-volatile unsigned int INJ_sampling_interval = 0;
-volatile unsigned int VSS_sampling_interval = 0;
-//trip and total distance counter in multiples of 10m
-unsigned long tripAx10m = 0;
-unsigned long tripBx10m = 0;
-unsigned long tripCx10m = 0;
-unsigned long totalx10m = 0;
-
-unsigned long tripAx1ml = 0;
-unsigned long tripBx1ml = 0;
-unsigned long tripCx1ml = 0;
-
-//incremental distance counter in cm
-unsigned int currentDistancex1cm = 0;
+// Vehicle odometer.
+// Public CANopen value: 0.1 km per count, stored in the low 24 bits.
+// Internal remainder: accumulated meter-milliseconds, retained so 40 ms VSS
+// samples do not lose fractional distance.
+unsigned long odometerX100m = 0;
+unsigned long odometerRemainderMeterMs = 0;
 
 unsigned char bitsized_data[15] = {
         0x00, //ACC
@@ -175,10 +165,8 @@ int getDLData(char answer) {
         
     //handle special sensors
     switch (sensor) {
-        case _ECU_SENSOR_VSS:  
-            calcDistance(answer); break;
-        case _ECU_SENSOR_INJ_HB: 
-            calcConsumption(answer); break;
+        case _ECU_SENSOR_VSS:
+            Odometer_Update((unsigned char)answer); break;
         case _ECU_SENSOR_P0: 
         case _ECU_SENSOR_P1: 
         case _ECU_SENSOR_INPUT1: 
@@ -202,105 +190,31 @@ int getDLData(char answer) {
     return 0;
 }
 
-void calcDistance(char data) {
-    unsigned char * ta;
-    unsigned char * tb;
-    unsigned char * tc;
-    
-    if (data==0x00) { VSS_sampling_interval=0; }
-    else {
-        if (VSS_sampling_interval>1) {
-            float time = 0.2*(VSS_sampling_interval-1);  //calc time elapsed (in ms) since last VSS sample. 0.2ms ISR
-            float distance = (time*data)/36;  //calc distance in cm based on speed sampled. /36 (cm/ms) in 1km/h
-            //ADD distance to trip and total counters
+void Odometer_Update(unsigned char speedKmh) {
+    /*
+     * VSS is sampled every _MICROEVENT milliseconds (currently 40 ms).
+     *
+     * distance [m] = speed [km/h] * time [ms] / 3600
+     *
+     * Accumulate the numerator in meter-milliseconds. One odometer count is
+     * 100 m, therefore one count corresponds to 360000 meter-milliseconds.
+     * This uses integer arithmetic only and preserves fractional distance
+     * between samples.
+     */
+    const unsigned long ODOMETER_COUNT_THRESHOLD = 360000UL;
 
-            currentDistancex1cm = currentDistancex1cm + (unsigned int) distance;
-            
-            if (currentDistancex1cm>1000) {
-                currentDistancex1cm = currentDistancex1cm - 1000;
-                tripAx10m = tripAx10m + 1;
-                tripBx10m = tripBx10m + 1;
-                tripCx10m = tripCx10m + 1;
-                totalx10m = totalx10m + 1;
+    odometerRemainderMeterMs +=
+        (unsigned long)speedKmh * (unsigned long)_MICROEVENT;
 
-                //TO_DO: remove this when you fix trip calculation
-                //storeDistance();
-            }
+    while (odometerRemainderMeterMs >= ODOMETER_COUNT_THRESHOLD) {
+        odometerRemainderMeterMs -= ODOMETER_COUNT_THRESHOLD;
+
+        if (odometerX100m < 0xFFFFFFUL) {
+            odometerX100m++;
         }
-        VSS_sampling_interval = 1;
     }
 }
 
-void storeDistance(void) {
-    //aux vars
-    unsigned char a;
-    unsigned char b;
-    unsigned char c;
-    unsigned char d;
-
-    a = (unsigned char)(totalx10m & 0xFFUL);
-    b = (unsigned char)((totalx10m >> 8) & 0xFFUL);
-    c = (unsigned char)((totalx10m >> 16) & 0xFFUL);
-    d = (unsigned char)((totalx10m >> 24) & 0xFFUL);
-    
-    write_octet_eep(_DL_EEPROM_ADD_DIST1, a);
-    write_octet_eep(_DL_EEPROM_ADD_DIST2, b);
-    write_octet_eep(_DL_EEPROM_ADD_DIST3, c);    
-    write_octet_eep(_DL_EEPROM_ADD_DIST4, d);             
-}
-
-void loadDistance(void) { 
-    //aux vars
-    char a;
-    char b;
-    char c;
-    char d;
-
-    d = read_octet_eep(_DL_EEPROM_ADD_DIST4);
-    a = read_octet_eep(_DL_EEPROM_ADD_DIST3);
-    b = read_octet_eep(_DL_EEPROM_ADD_DIST2);
-    c = read_octet_eep(_DL_EEPROM_ADD_DIST1);
-    
-    totalx10m = d;
-    totalx10m = totalx10m<<8;
-    totalx10m = totalx10m + a;
-    totalx10m = totalx10m<<8;
-    totalx10m = totalx10m + b;
-    totalx10m = totalx10m<<8;
-    totalx10m = totalx10m + c;
-
-    return;
-}
-
-void resetDistance(void) {
-    write_octet_eep(_DL_EEPROM_ADD_DIST1, 0x00);
-    write_octet_eep(_DL_EEPROM_ADD_DIST2, 0x00);
-    write_octet_eep(_DL_EEPROM_ADD_DIST3, 0x00);
-    write_octet_eep(_DL_EEPROM_ADD_DIST4, 0x00);
-    return;
-}
-
-
-void calcConsumption(char data) {
-    int RPM_tmp = (ecuSensors[_ECU_SENSOR_RPM_HB].value<<8)+ecuSensors[_ECU_SENSOR_RPM_LB].value;
-    int inj_ms = (ecuSensors[_ECU_SENSOR_INJ_HB].value<<8)+ecuSensors[_ECU_SENSOR_INJ_LB].value;
-    if (RPM_tmp>0) {
-        int RPM = (int) 1875000/RPM_tmp;
-        if (INJ_sampling_interval>0) {
-            float time = 0.2*INJ_sampling_interval;  //calc time elapsed (in ms) since last VSS sample. 0.2ms ISR
-            INJ_sampling_interval = 0;
-
-            //ml/ms of open injector:X = 240cc/min injectors / 60000 (ms/min))
-            //ml/min @ current RPM and throtle opening: X = X * (RPM) * 0.5squirts per rotation * 4 injectors   * ms per squirt (inj_ms) 
-            //ml in current sampling period: X = X/60000 * sampling period in ms (time)
-            float fuelx1ml = RPM*inj_ms*time*0.008/60000; 
-                
-            tripAx1ml = tripAx1ml + fuelx1ml;
-            tripBx1ml = tripBx1ml + fuelx1ml;
-            tripCx1ml = tripCx1ml + fuelx1ml;
-        }  
-    }
-} 
 
 //TODO:
 void registerCEL(char data) {

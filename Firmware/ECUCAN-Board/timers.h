@@ -14,7 +14,6 @@ extern unsigned char TMR0H_load;
 extern unsigned char TMR0L_load;
 extern unsigned char TMR1H_load;
 extern unsigned char TMR1L_load;
-extern unsigned char TMR2_load;
 extern unsigned char TMR3H_load;
 extern unsigned char TMR3L_load;
 

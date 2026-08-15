@@ -178,7 +178,7 @@ void ECUCAN_Initialize(void)
   */  
     
     //Load EPROM variables to RAM
-    loadDistance();
+    //loadDistance();
     
     //set device Operacional - to kill - to be controlled by master
     COMM_STATE_OPER = 1;

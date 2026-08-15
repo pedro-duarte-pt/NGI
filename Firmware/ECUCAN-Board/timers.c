@@ -11,7 +11,6 @@ unsigned char TMR0H_load;
 unsigned char TMR0L_load;
 unsigned char TMR1H_load;
 unsigned char TMR1L_load;
-unsigned char TMR2_load;
 unsigned char TMR3H_load;
 unsigned char TMR3L_load;
 
@@ -101,25 +100,7 @@ void configureTimers() {
     TMR3IF = 0;
     T3CONbits.TMR3ON = 1;       //enable timer 3  
         
-    ////////// TMR2 ////////////////
-    //configure timer2 for 200us period (VSS and fuel consumption calcs)
-    T2CONbits.TMR2ON = 0;     //disable timer 2
-    T2CONbits.T2CKPS = 2;   //1:16 prescaler
-    T2CONbits.T2OUTPS = 0;  //1:1 postscaler
-    TMR2IP = 1;            //TMR Overflow Interrupt Priority bit set to High
-    TMR2IE = 1;            //enables Timer2 Interrupts
 
-    tmp = (unsigned long) ((_XTAL_FREQ/4/16*(unsigned)(3*OSCTUNEbits.PLLEN+1))*((float)_SAMPLING_PERIOD/1000));
-    
-    if (tmp>0xFF) { 
-        deviceErrorCode = _DEV_ERROR_CLOCKSET; 
-        deviceStatus = _DEV_ERROR;    
-    }
-    TMR2_load = (unsigned char) (0xFF - (unsigned char) tmp);
-
-    TMR2 = TMR2_load;     
-    TMR2IF = 0;
-    T2CONbits.TMR2ON = 1;       //enable timer 2
 }
 
 

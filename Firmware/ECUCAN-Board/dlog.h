@@ -76,17 +76,10 @@ typedef struct
 #define _DL_BIT_AC_OFFSET 2
 #define _DL_BIT_BRAKE_OFFSET 4
 
-#define _DL_EEPROM_ADD_DIST1 0
-#define _DL_EEPROM_ADD_DIST2 1
-#define _DL_EEPROM_ADD_DIST3 2
-#define _DL_EEPROM_ADD_DIST4 3
 
 
 #define WATCHDOG_LIMIT 10
 
-void storeDistance(void);
-void resetDistance(void);
-void loadDistance(void);
 void startDL(void);
 void checkECU(char);
 void handleByte(char);
@@ -96,16 +89,13 @@ int askDLData(void);
 int isElegible(void);
 int getDLData(char);
 
-void calcDistance(char);
-void calcConsumption(char);
+void Odometer_Update(unsigned char);
 void registerCEL(char);
 void load_bits(unsigned char, char);
 
 extern unsigned char timeSlice;
 extern ECU_SENSOR_ENTRY ecuSensors[];
 extern unsigned char bitsized_data[];
-extern volatile unsigned int INJ_sampling_interval;
-extern volatile unsigned int VSS_sampling_interval;
-extern unsigned long totalx10m;
+extern unsigned long odometerX100m;
 
 #endif	/* DATALOGGER_H */
