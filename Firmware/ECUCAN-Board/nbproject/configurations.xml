@@ -27,7 +27,7 @@
           <itemPath>canopen/CO_SYNC.H</itemPath>
           <itemPath>canopen/CO_TOOLS.H</itemPath>
           <itemPath>canopen/CO_TYPES.H</itemPath>
-          <itemPath>canopen/DemoObj.h</itemPath>
+          <itemPath>canopen/ECUCAN_App.h</itemPath>
         </logicalFolder>
       </logicalFolder>
       <itemPath>rs232.h</itemPath>
@@ -67,8 +67,8 @@
         <itemPath>canopen/CO_SDO1.c</itemPath>
         <itemPath>canopen/CO_SYNC.c</itemPath>
         <itemPath>canopen/CO_TOOLS.c</itemPath>
-        <itemPath>canopen/DemoObj.c</itemPath>
         <itemPath>canopen/exttst.c</itemPath>
+        <itemPath>canopen/ECUCAN_App.c</itemPath>
       </logicalFolder>
       <itemPath>main.c</itemPath>
       <itemPath>rs232.c</itemPath>

@@ -7,7 +7,7 @@
 #include "system.h"
 #include "dlog.h"
 #include "rs232.h"
-#include "canopen/DemoObj.h"
+#include "canopen/ECUCAN_App.h"
 
    
 //watchdog for blocked ECUs

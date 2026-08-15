@@ -101,8 +101,8 @@ extern const unsigned char TPDO2_objnum;
 extern const unsigned char TPDO2_defnum;
 
 
-void DemoProcessEvents(void);
-void StartECUReader(void);
+void ECUCAN_ProcessEvents(void);
+void ECUCAN_Initialize(void);
 void CO_COMM_TPDO1_COBIDAccessEvent(void);
 void CO_COMM_TPDO2_COBIDAccessEvent(void);
 void CO_COMM_TPDO1_TypeAccessEvent(void);

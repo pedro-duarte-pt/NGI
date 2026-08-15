@@ -3,7 +3,7 @@
  * Microchip CANopen Stack (Demonstration Object)
  *
  *****************************************************************************
- * FileName:        DemoObj.C
+ * FileName:        ECUCAN_App.c
  * Dependencies:    
  * Processor:       PIC18F with CAN
  * Compiler:       	C18 02.30.00 or higher
@@ -42,7 +42,7 @@
  * 
  *****************************************************************************/
 
-#include	"DemoObj.h"
+#include	"ECUCAN_App.h"
 #include    "../dlog.h"
 #include	"CO_MAIN.H"
 #include	"CO_DEFS.DEF"
@@ -121,7 +121,7 @@ const unsigned char TPDO2_defnum = 2;   //tpdo1 number of subindex entries on tp
 TPDO TPDOs[CO_NUM_OF_TPDO];                   
 
 /*********************************************************************
- * Function:        void StartECUReader(void)
+ * Function:        void ECUCAN_Initialize(void)
  *
  * PreCondition:    none
  *
@@ -137,7 +137,7 @@ TPDO TPDOs[CO_NUM_OF_TPDO];
  * Note:          	
  ********************************************************************/
 //STATUS: TODO <------
-void StartECUReader(void)
+void ECUCAN_Initialize(void)
 {
     //configure TPDOs
     for (char i=0; i<CO_NUM_OF_TPDO; i++) {
@@ -280,7 +280,7 @@ void readRPDO(unsigned char RPDO) {
 }
 
 /*********************************************************************
- * Function:        void DemoProcessEvents(void)
+ * Function:        void ECUCAN_ProcessEvents(void)
  *
  * PreCondition:    none
  *
@@ -296,7 +296,7 @@ void readRPDO(unsigned char RPDO) {
  * Note:          	
  ********************************************************************/
 //STATUS: OK
-void DemoProcessEvents(void)
+void ECUCAN_ProcessEvents(void)
 {
     for (char i=0; i<CO_NUM_OF_TPDO; i++) {
         // If ready to send 

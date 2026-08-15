@@ -73,7 +73,7 @@
 #include "timers.h"
 #include "dlog.h"
 #include "canopen/CO_MAIN.H"
-#include "canopen/DemoObj.h"
+#include "canopen/ECUCAN_App.h"
 
 unsigned char RXbyte_received;
 unsigned char RXbyte_value;
@@ -237,7 +237,7 @@ void main(void) {
     //resetDistance();
     
     // Initialize the ECU reader
-	StartECUReader();					    
+	ECUCAN_Initialize();					    
     
 	while(1)
 	{
@@ -266,6 +266,6 @@ void main(void) {
 		mCO_ProcessAllEvents();		
 		
 		// Process application specific functions
-		DemoProcessEvents();		
+		ECUCAN_ProcessEvents();		
 	}
 }
