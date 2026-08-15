@@ -4,7 +4,7 @@
 
 #include "eeprom.h"
 
-void write_octet_eep( unsigned char address, unsigned char data )
+void write_octet_eep(unsigned char address, unsigned char data)
 {
     while( EECON1bits.WR  )     // make sure it's not busy with an earlier write.
     {}
@@ -26,7 +26,7 @@ void write_octet_eep( unsigned char address, unsigned char data )
     EECON1bits.WREN  = 0;   //Disables write cycles to Flash program/data EEPROM
 }
 
-unsigned char read_octet_eep( unsigned short address )
+unsigned char read_octet_eep(unsigned char address)
 {
     while( EECON1bits.WR  )     // make sure it's not busy with an earlier write.
     {}

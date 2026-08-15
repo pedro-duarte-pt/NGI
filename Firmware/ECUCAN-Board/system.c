@@ -49,11 +49,11 @@ void setClock() {
 
 void setLEDS() {
     switch(deviceStatus) {
-        case _DEV_SETUP: _LED_YELLOW = _LED_GREEN; _LED_GREEN = (unsigned) !_LED_GREEN;  break;
-        case _DEV_READY: _LED_YELLOW = _LED_OFF; _LED_GREEN = (unsigned) !_LED_GREEN;  break;
+        case _DEV_SETUP: _LED_YELLOW = _LED_GREEN; _LED_GREEN = (unsigned char)(!_LED_GREEN);  break;
+        case _DEV_READY: _LED_YELLOW = _LED_OFF; _LED_GREEN = (unsigned char)(!_LED_GREEN);  break;
         case _DEV_ON: _LED_YELLOW = _LED_OFF; _LED_GREEN = _LED_ON;  break;
         case _DEV_ERROR: _LED_YELLOW = _LED_ON; _LED_GREEN = _LED_OFF; break;
-        case _DEV_SLEEP: _LED_YELLOW = (unsigned) !_LED_YELLOW; _LED_GREEN = _LED_OFF;  break;
+        case _DEV_SLEEP: _LED_YELLOW = (unsigned char)(!_LED_YELLOW); _LED_GREEN = _LED_OFF;  break;
         case _DEV_CANERR: _LED_YELLOW = _LED_ON; _LED_GREEN = _LED_ON;  break;        
     }
 }

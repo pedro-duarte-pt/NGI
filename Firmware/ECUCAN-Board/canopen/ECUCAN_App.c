@@ -140,7 +140,7 @@ TPDO TPDOs[CO_NUM_OF_TPDO];
 void ECUCAN_Initialize(void)
 {
     //configure TPDOs
-    for (char i=0; i<CO_NUM_OF_TPDO; i++) {
+    for (unsigned char i=0; i<CO_NUM_OF_TPDO; i++) {
         // Convert to MCHP
         mTOOLS_CO2MCHP(mCOMM_GetNodeID().byte + (0xC0000180L+0x100L*i));
         switch (i) {
@@ -233,28 +233,28 @@ void CO_COMMSyncEvent(void)
     }
 }
 
-char checkTPDOisPutRdy(char TPDO) {
-    if (TPDO==0) { return (unsigned) mTPDOIsPutRdy(1);}
-    else if (TPDO==1) { return (unsigned) mTPDOIsPutRdy(2);}
-    else if (TPDO==2) { return (unsigned) mTPDOIsPutRdy(3);}
-    else if (TPDO==3) { return (unsigned) mTPDOIsPutRdy(4);}
-    else if (TPDO==4) { return (unsigned) mTPDOIsPutRdy(5);}
-    else if (TPDO==5) { return (unsigned) mTPDOIsPutRdy(6);}
-    else if (TPDO==6) { return (unsigned) mTPDOIsPutRdy(7);}
-    else if (TPDO==7) { return (unsigned) mTPDOIsPutRdy(8);}
-    return 0;
+unsigned char checkTPDOisPutRdy(unsigned char TPDO) {
+    if (TPDO==0) { return (mTPDOIsPutRdy(1) != 0U); }
+    else if (TPDO==1) { return (mTPDOIsPutRdy(2) != 0U); }
+    else if (TPDO==2) { return (mTPDOIsPutRdy(3) != 0U); }
+    else if (TPDO==3) { return (mTPDOIsPutRdy(4) != 0U); }
+    else if (TPDO==4) { return (mTPDOIsPutRdy(5) != 0U); }
+    else if (TPDO==5) { return (mTPDOIsPutRdy(6) != 0U); }
+    else if (TPDO==6) { return (mTPDOIsPutRdy(7) != 0U); }
+    else if (TPDO==7) { return (mTPDOIsPutRdy(8) != 0U); }
+    return 0U;
 }
 
-char checkRPDOisGetRdy(char RPDO) {
-    if (RPDO==0) { return mRPDOIsGetRdy(1);}
-    else if (RPDO==1) { return mRPDOIsGetRdy(2);}
-    else if (RPDO==2) { return mRPDOIsGetRdy(3);}
-    else if (RPDO==3) { return mRPDOIsGetRdy(4);}
-    else if (RPDO==4) { return mRPDOIsGetRdy(5);}
-    else if (RPDO==5) { return mRPDOIsGetRdy(6);}
-    else if (RPDO==6) { return mRPDOIsGetRdy(7);}
-    else if (RPDO==7) { return mRPDOIsGetRdy(8);}
-    return 0;
+unsigned char checkRPDOisGetRdy(unsigned char RPDO) {
+    if (RPDO==0) { return (mRPDOIsGetRdy(1) != 0U); }
+    else if (RPDO==1) { return (mRPDOIsGetRdy(2) != 0U); }
+    else if (RPDO==2) { return (mRPDOIsGetRdy(3) != 0U); }
+    else if (RPDO==3) { return (mRPDOIsGetRdy(4) != 0U); }
+    else if (RPDO==4) { return (mRPDOIsGetRdy(5) != 0U); }
+    else if (RPDO==5) { return (mRPDOIsGetRdy(6) != 0U); }
+    else if (RPDO==6) { return (mRPDOIsGetRdy(7) != 0U); }
+    else if (RPDO==7) { return (mRPDOIsGetRdy(8) != 0U); }
+    return 0U;
 }
 
 void writeTPDO(unsigned char TPDO) {
@@ -298,7 +298,7 @@ void readRPDO(unsigned char RPDO) {
 //STATUS: OK
 void ECUCAN_ProcessEvents(void)
 {
-    for (char i=0; i<CO_NUM_OF_TPDO; i++) {
+    for (unsigned char i=0; i<CO_NUM_OF_TPDO; i++) {
         // If ready to send 
         if (checkTPDOisPutRdy(i) && TPDOs[i].status.isQueuedForTX)
         {
@@ -311,7 +311,7 @@ void ECUCAN_ProcessEvents(void)
         }
     }
 
-    for (char j=0; j<CO_NUM_OF_RPDO; j++) {
+    for (unsigned char j=0; j<CO_NUM_OF_RPDO; j++) {
         // If any data has been received
         if (checkRPDOisGetRdy(j))
         {
@@ -384,7 +384,10 @@ void CO_COMM_RPDO1_COBIDAccessEvent(void)
 				else {mCO_DictSetRet(E_PARAM_RANGE);} //error
 			}
 			break;
-	}	
+
+        default:
+            break;
+}	
 }
 
 /*********************************************************************
@@ -450,7 +453,10 @@ void CO_COMM_TPDO1_COBIDAccessEvent(void)
 				else {mCO_DictSetRet(E_PARAM_RANGE);} //error
 			}
 			break;
-	}	
+
+        default:
+            break;
+}	
 }
 
 
@@ -517,7 +523,10 @@ void CO_COMM_TPDO2_COBIDAccessEvent(void)
 				else {mCO_DictSetRet(E_PARAM_RANGE);} //error
 			}
 			break;
-	}	
+
+        default:
+            break;
+}	
 }
 
 /*********************************************************************
@@ -568,7 +577,10 @@ void CO_COMM_TPDO1_TypeAccessEvent(void)
 			else {mCO_DictSetRet(E_PARAM_RANGE);} //error
 			
 			break;
-	}	
+
+        default:
+            break;
+}	
 }
 
 
@@ -621,7 +633,10 @@ void CO_COMM_TPDO2_TypeAccessEvent(void)
 			else {mCO_DictSetRet(E_PARAM_RANGE);} //error
 			
 			break;
-	}	
+
+        default:
+            break;
+}	
 }
 
 /*********************************************************************

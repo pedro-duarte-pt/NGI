@@ -3,7 +3,7 @@
  * Microchip CANopen Stack (Demonstration Object)
  *
  *****************************************************************************
- * FileName:        DEMOOBJ.H
+ * FileName:        ECUCAN_App.h
  * Dependencies:    
  * Processor:       PIC18F with CAN
  * Compiler:       	C18 02.30.00 or higher
@@ -42,6 +42,9 @@
  * 
  *****************************************************************************/
 
+
+#ifndef ECUCAN_APP_H
+#define ECUCAN_APP_H
 
 // These are mapping constants for TPDO1 
 // starting at 0x1A00 in the dictionary
@@ -110,6 +113,11 @@ void CO_COMM_TPDO2_TypeAccessEvent(void);
 
 void CO_COMM_RPDO1_COBIDAccessEvent(void);
 
+unsigned char checkTPDOisPutRdy(unsigned char TPDO);
+unsigned char checkRPDOisGetRdy(unsigned char RPDO);
+void writeTPDO(unsigned char TPDO);
+void readRPDO(unsigned char RPDO);
+
 
 typedef struct _TPDO
 {
@@ -129,3 +137,4 @@ typedef struct _TPDO
         
 extern TPDO TPDOs[];
 
+#endif /* ECUCAN_APP_H */
