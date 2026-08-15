@@ -75,12 +75,12 @@
 #include "canopen/CO_MAIN.H"
 #include "canopen/ECUCAN_App.h"
 
-unsigned char RXbyte_received;
-unsigned char RXbyte_value;
-unsigned char startDataFetch_flag;
-unsigned char processCO_Timed_events_flag;
+volatile unsigned char RXbyte_received;
+volatile unsigned char RXbyte_value;
+volatile unsigned char startDataFetch_flag;
+volatile unsigned char processCO_Timed_events_flag;
 unsigned char CANERR_resolved = 1;
-unsigned long msCOUNTER;
+volatile unsigned long msCOUNTER;
 
 void enableInterrupts() {
     INTCONbits.RBIE = 0;            //disable PortB interrupts
@@ -152,32 +152,33 @@ void __interrupt() checkInterrupts(void) {
     }     
     
     
-    //If RS232 Interface received something
-    if (RCIE && RCIF) { 
-        if (RCSTA1bits.FERR || RCSTA1bits.OERR) {
-            if (RCSTA1bits.OERR) { 
-                CREN1 = 0;      //clear overflow error
-                CREN1 = 1; 
+    // EUSART1 receive.
+    // The ECU protocol is request/response, so one response byte is expected
+    // for each outstanding request. Keep the ISR minimal and defer processing
+    // to the main loop.
+    if (RCIE && RCIF) {
+        if (RCSTA1bits.OERR) {
+            CREN1 = 0;
+            CREN1 = 1;
+        }
+
+        rcbuf = RCREG;
+
+        if (!RCSTA1bits.FERR) {
+            if (deviceStatus == _DEV_READY) {
+                if (DEBUG_ON) {
+                    deviceStatus = _DEV_ON;
+                    operatingMode = _MODE_DL;
+                }
+                else {
+                    checkECU(rcbuf);
+                }
             }
-            if (RCSTA1bits.FERR) { 
-                rcbuf = RCREG;  //clear framing error and skip message
+            else if (deviceStatus == _DEV_ON) {
+                RXbyte_value = (unsigned char)rcbuf;
+                RXbyte_received = 1;
             }
         }
-        else {
-            if (deviceStatus == _DEV_READY) { 
-                if(DEBUG_ON) { 
-                    deviceStatus = _DEV_ON; 
-                    operatingMode = _MODE_DL; 
-                }
-                else { 
-                    checkECU(RCREG); 
-                }
-            }
-            else {
-                RXbyte_value = RCREG;
-                if (deviceStatus == _DEV_ON) {  RXbyte_received = 1; }
-            }            
-        }        
     }
     
     //if button was pressed or released

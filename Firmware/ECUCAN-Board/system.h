@@ -36,15 +36,15 @@
    _MODE_CM,     //Costume Modules operating mode for specific tasks,    //Specific Command operating mode for legacy applications
  } _DEV_OPERATING_MODE;
  
-extern _DEV_OPERATING_MODE operatingMode;
-extern _DEV_STATUS deviceStatus;    
+extern volatile _DEV_OPERATING_MODE operatingMode;
+extern volatile _DEV_STATUS deviceStatus;    
 extern _DEV_ERROR_CODE deviceErrorCode;          
 extern int buttonHeldFor;
 
-extern unsigned char RXbyte_received;               //flag indicating that a byte was received (to avoid LOAD on ISR, and allow post ISR treatment of the byte)
-extern unsigned char RXbyte_value;                  //the value of the received byte
-extern unsigned char startDataFetch_flag;           //flag indicating that a new Datafetch is to start (to avoid LOAD on ISR, and allow post ISR initialization of the datafetch)
-extern unsigned char processCO_Timed_events_flag;   //flag indicating that 8ms have elapsed. It is time to process CANOPEN timed events
+extern volatile unsigned char RXbyte_received;               //flag indicating that a byte was received (to avoid LOAD on ISR, and allow post ISR treatment of the byte)
+extern volatile unsigned char RXbyte_value;                  //the value of the received byte
+extern volatile unsigned char startDataFetch_flag;           //flag indicating that a new Datafetch is to start (to avoid LOAD on ISR, and allow post ISR initialization of the datafetch)
+extern volatile unsigned char processCO_Timed_events_flag;   //flag indicating that 8ms have elapsed. It is time to process CANOPEN timed events
 
 void resetHW(void);
 

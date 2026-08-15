@@ -104,8 +104,8 @@ void load_bits(unsigned char, char);
 extern unsigned char timeSlice;
 extern ECU_SENSOR_ENTRY ecuSensors[];
 extern unsigned char bitsized_data[];
-extern unsigned int INJ_sampling_interval;
-extern unsigned int VSS_sampling_interval;
+extern volatile unsigned int INJ_sampling_interval;
+extern volatile unsigned int VSS_sampling_interval;
 extern unsigned long totalx10m;
 
 #endif	/* DATALOGGER_H */

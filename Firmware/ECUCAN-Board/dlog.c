@@ -18,8 +18,8 @@ unsigned char dataIndex = _SENSOR_ENTRY_MAX;
 //increments every datalogging period (Default=40ms), resets after reaching 10
 unsigned char timeSlice;
 //increments by 1 with every 200 microseconds
-unsigned int INJ_sampling_interval = 0;
-unsigned int VSS_sampling_interval = 0;
+volatile unsigned int INJ_sampling_interval = 0;
+volatile unsigned int VSS_sampling_interval = 0;
 //trip and total distance counter in multiples of 10m
 unsigned long tripAx10m = 0;
 unsigned long tripBx10m = 0;

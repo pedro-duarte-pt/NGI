@@ -32,7 +32,7 @@ int setEUSART(void) {
     TXSTA1 = 0b00000100;   
     RCSTA1 = 0b00010000;
     BAUDCON1 = 0b00000000;
-    SPBRG1 = x;                                  //Writing baudrate timer Register
+    SPBRG1 = (unsigned char)x;                                  //Writing baudrate timer Register
     RCSTA1bits.SPEN = 1;                        //ENABLE Reception on EUSART 1
     TXSTA1bits.TXEN = 1;                        //Enables Transmission on EUSART 1
 

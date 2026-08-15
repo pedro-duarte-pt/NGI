@@ -9,9 +9,9 @@
 #include "dlog.h"
 #include "canopen.h"
 
-_DEV_STATUS deviceStatus = _DEV_SETUP;    
+volatile _DEV_STATUS deviceStatus = _DEV_SETUP;    
 _DEV_ERROR_CODE deviceErrorCode = _DEV_ERROR_NOERROR;  
-_DEV_OPERATING_MODE operatingMode;
+volatile _DEV_OPERATING_MODE operatingMode;
 int buttonHeldFor = -1;         //how many second is the button being held for
 //to be called upon release of 4 seconds btn push event
 
