@@ -7,6 +7,7 @@
 #include "dlog.h"
 #include "rs232.h"
 #include "canopen/ECUCAN_App.h"
+#include "eeprom.h"
 
    
 //watchdog for blocked ECUs
@@ -22,6 +23,41 @@ unsigned char timeSlice;
 // samples do not lose fractional distance.
 unsigned long odometerX100m = 0;
 unsigned long odometerRemainderMeterMs = 0;
+
+#define ODOMETER_EEPROM_SLOT_COUNT          32U
+#define ODOMETER_EEPROM_RECORD_SIZE         12U
+#define ODOMETER_EEPROM_BASE_ADDRESS        0U
+#define ODOMETER_EEPROM_MAGIC_0             0x4FU
+#define ODOMETER_EEPROM_MAGIC_1             0x44U
+#define ODOMETER_SAVE_DISTANCE_COUNTS       5UL   /* 500 m */
+#define ODOMETER_SAVE_TIMEOUT_SECONDS       10U
+#define ODOMETER_REMAINDER_MAX              360000UL
+
+#define ODO_REC_MAGIC0      0U
+#define ODO_REC_MAGIC1      1U
+#define ODO_REC_SEQUENCE_L  2U
+#define ODO_REC_SEQUENCE_H  3U
+#define ODO_REC_ODOMETER_0  4U
+#define ODO_REC_ODOMETER_1  5U
+#define ODO_REC_ODOMETER_2  6U
+#define ODO_REC_REMAINDER_0 7U
+#define ODO_REC_REMAINDER_1 8U
+#define ODO_REC_REMAINDER_2 9U
+#define ODO_REC_CRC_L       10U
+#define ODO_REC_CRC_H       11U
+
+static unsigned int odometerPersistenceSequence = 0U;
+static unsigned char odometerPersistenceNextSlot = 0U;
+static unsigned long odometerPersistedX100m = 0UL;
+static volatile unsigned char odometerPersistenceDirty = 0U;
+static volatile unsigned char odometerPersistenceSeconds = 0U;
+
+static unsigned int Odometer_Crc16(const unsigned char *data, unsigned char length);
+static unsigned char Odometer_ReadRecord(unsigned char slot, unsigned int *sequence,
+        unsigned long *odometer, unsigned long *remainder);
+static void Odometer_WriteRecord(void);
+static unsigned char Odometer_SequenceIsNewer(unsigned int candidate, unsigned int reference);
+
 
 unsigned char bitsized_data[15] = {
         0x00, //ACC
@@ -202,6 +238,8 @@ void Odometer_Update(unsigned char speedKmh) {
      * between samples.
      */
     const unsigned long ODOMETER_COUNT_THRESHOLD = 360000UL;
+    unsigned long previousOdometer = odometerX100m;
+    unsigned long previousRemainder = odometerRemainderMeterMs;
 
     odometerRemainderMeterMs +=
         (unsigned long)speedKmh * (unsigned long)_MICROEVENT;
@@ -213,6 +251,200 @@ void Odometer_Update(unsigned char speedKmh) {
             odometerX100m++;
         }
     }
+
+    if ((odometerX100m != previousOdometer) ||
+            (odometerRemainderMeterMs != previousRemainder)) {
+        odometerPersistenceDirty = 1U;
+    }
+}
+
+void Odometer_PersistenceInitialize(void)
+{
+    unsigned char slot;
+    unsigned char found = 0U;
+    unsigned char newestSlot = 0U;
+    unsigned int sequence;
+    unsigned int newestSequence = 0U;
+    unsigned long storedOdometer;
+    unsigned long storedRemainder;
+    unsigned long newestOdometer = 0UL;
+    unsigned long newestRemainder = 0UL;
+
+    for (slot = 0U; slot < ODOMETER_EEPROM_SLOT_COUNT; slot++) {
+        if (Odometer_ReadRecord(slot, &sequence, &storedOdometer, &storedRemainder)) {
+            if ((!found) || Odometer_SequenceIsNewer(sequence, newestSequence)) {
+                found = 1U;
+                newestSlot = slot;
+                newestSequence = sequence;
+                newestOdometer = storedOdometer;
+                newestRemainder = storedRemainder;
+            }
+        }
+    }
+
+    if (found) {
+        odometerX100m = newestOdometer;
+        odometerRemainderMeterMs = newestRemainder;
+        odometerPersistenceSequence = newestSequence;
+        odometerPersistenceNextSlot = (unsigned char)((newestSlot + 1U) % ODOMETER_EEPROM_SLOT_COUNT);
+    }
+    else {
+        odometerX100m = 0UL;
+        odometerRemainderMeterMs = 0UL;
+        odometerPersistenceSequence = 0U;
+        odometerPersistenceNextSlot = 0U;
+    }
+
+    odometerPersistedX100m = odometerX100m;
+    odometerPersistenceDirty = 0U;
+    odometerPersistenceSeconds = 0U;
+}
+
+void Odometer_PersistenceSecondTick(void)
+{
+    if (odometerPersistenceDirty && (odometerPersistenceSeconds < 0xFFU)) {
+        odometerPersistenceSeconds++;
+    }
+}
+
+void Odometer_ProcessPersistence(void)
+{
+    unsigned char saveByDistance = 0U;
+
+    if (!odometerPersistenceDirty) {
+        return;
+    }
+
+    if (odometerX100m >= odometerPersistedX100m) {
+        if ((odometerX100m - odometerPersistedX100m) >= ODOMETER_SAVE_DISTANCE_COUNTS) {
+            saveByDistance = 1U;
+        }
+    }
+    else {
+        /* Supports a future deliberate service-mode odometer adjustment. */
+        saveByDistance = 1U;
+    }
+
+    if (saveByDistance || (odometerPersistenceSeconds >= ODOMETER_SAVE_TIMEOUT_SECONDS)) {
+        Odometer_WriteRecord();
+    }
+}
+
+static unsigned int Odometer_Crc16(const unsigned char *data, unsigned char length)
+{
+    unsigned int crc = 0xFFFFU;
+    unsigned char i;
+    unsigned char bit;
+
+    for (i = 0U; i < length; i++) {
+        crc ^= (unsigned int)data[i] << 8;
+        for (bit = 0U; bit < 8U; bit++) {
+            if (crc & 0x8000U) {
+                crc = (unsigned int)((crc << 1) ^ 0x1021U);
+            }
+            else {
+                crc <<= 1;
+            }
+        }
+    }
+
+    return crc;
+}
+
+static unsigned char Odometer_ReadRecord(unsigned char slot, unsigned int *sequence,
+        unsigned long *odometer, unsigned long *remainder)
+{
+    unsigned char record[ODOMETER_EEPROM_RECORD_SIZE];
+    unsigned char i;
+    unsigned int base = ODOMETER_EEPROM_BASE_ADDRESS +
+            ((unsigned int)slot * ODOMETER_EEPROM_RECORD_SIZE);
+    unsigned int storedCrc;
+    unsigned int calculatedCrc;
+
+    for (i = 0U; i < ODOMETER_EEPROM_RECORD_SIZE; i++) {
+        record[i] = read_octet_eep(base + i);
+    }
+
+    if ((record[ODO_REC_MAGIC0] != ODOMETER_EEPROM_MAGIC_0) ||
+            (record[ODO_REC_MAGIC1] != ODOMETER_EEPROM_MAGIC_1)) {
+        return 0U;
+    }
+
+    storedCrc = (unsigned int)record[ODO_REC_CRC_L] |
+            ((unsigned int)record[ODO_REC_CRC_H] << 8);
+    calculatedCrc = Odometer_Crc16(record, ODO_REC_CRC_L);
+    if (storedCrc != calculatedCrc) {
+        return 0U;
+    }
+
+    *sequence = (unsigned int)record[ODO_REC_SEQUENCE_L] |
+            ((unsigned int)record[ODO_REC_SEQUENCE_H] << 8);
+    *odometer = (unsigned long)record[ODO_REC_ODOMETER_0] |
+            ((unsigned long)record[ODO_REC_ODOMETER_1] << 8) |
+            ((unsigned long)record[ODO_REC_ODOMETER_2] << 16);
+    *remainder = (unsigned long)record[ODO_REC_REMAINDER_0] |
+            ((unsigned long)record[ODO_REC_REMAINDER_1] << 8) |
+            ((unsigned long)record[ODO_REC_REMAINDER_2] << 16);
+
+    if (*remainder >= ODOMETER_REMAINDER_MAX) {
+        return 0U;
+    }
+
+    return 1U;
+}
+
+static void Odometer_WriteRecord(void)
+{
+    unsigned char record[ODOMETER_EEPROM_RECORD_SIZE];
+    unsigned char i;
+    unsigned int crc;
+    unsigned int base;
+    unsigned int nextSequence = odometerPersistenceSequence + 1U;
+    unsigned long odometerSnapshot = odometerX100m;
+    unsigned long remainderSnapshot = odometerRemainderMeterMs;
+
+    record[ODO_REC_MAGIC0] = ODOMETER_EEPROM_MAGIC_0;
+    record[ODO_REC_MAGIC1] = ODOMETER_EEPROM_MAGIC_1;
+    record[ODO_REC_SEQUENCE_L] = (unsigned char)(nextSequence & 0xFFU);
+    record[ODO_REC_SEQUENCE_H] = (unsigned char)(nextSequence >> 8);
+    record[ODO_REC_ODOMETER_0] = (unsigned char)(odometerSnapshot & 0xFFUL);
+    record[ODO_REC_ODOMETER_1] = (unsigned char)((odometerSnapshot >> 8) & 0xFFUL);
+    record[ODO_REC_ODOMETER_2] = (unsigned char)((odometerSnapshot >> 16) & 0xFFUL);
+    record[ODO_REC_REMAINDER_0] = (unsigned char)(remainderSnapshot & 0xFFUL);
+    record[ODO_REC_REMAINDER_1] = (unsigned char)((remainderSnapshot >> 8) & 0xFFUL);
+    record[ODO_REC_REMAINDER_2] = (unsigned char)((remainderSnapshot >> 16) & 0xFFUL);
+
+    crc = Odometer_Crc16(record, ODO_REC_CRC_L);
+    record[ODO_REC_CRC_L] = (unsigned char)(crc & 0xFFU);
+    record[ODO_REC_CRC_H] = (unsigned char)(crc >> 8);
+
+    base = ODOMETER_EEPROM_BASE_ADDRESS +
+            ((unsigned int)odometerPersistenceNextSlot * ODOMETER_EEPROM_RECORD_SIZE);
+
+    /* CRC is written last, so a torn record is rejected on the next boot. */
+    for (i = 0U; i < ODO_REC_CRC_L; i++) {
+        write_octet_eep(base + i, record[i]);
+    }
+    write_octet_eep(base + ODO_REC_CRC_L, record[ODO_REC_CRC_L]);
+    write_octet_eep(base + ODO_REC_CRC_H, record[ODO_REC_CRC_H]);
+
+    odometerPersistenceSequence = nextSequence;
+    odometerPersistenceNextSlot = (unsigned char)((odometerPersistenceNextSlot + 1U) %
+            ODOMETER_EEPROM_SLOT_COUNT);
+    odometerPersistedX100m = odometerSnapshot;
+
+    /* If state changed during the write, leave it dirty for another checkpoint. */
+    if ((odometerX100m == odometerSnapshot) &&
+            (odometerRemainderMeterMs == remainderSnapshot)) {
+        odometerPersistenceDirty = 0U;
+        odometerPersistenceSeconds = 0U;
+    }
+}
+
+static unsigned char Odometer_SequenceIsNewer(unsigned int candidate, unsigned int reference)
+{
+    unsigned int difference = candidate - reference;
+    return (unsigned char)((difference != 0U) && (difference < 0x8000U));
 }
 
 

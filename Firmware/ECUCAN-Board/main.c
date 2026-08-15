@@ -99,6 +99,7 @@ void __interrupt() checkInterrupts(void) {
         TMR0L = TMR0L_load;           //counter for 1 second Low Byte  
         
         checkButtonPresure();
+        Odometer_PersistenceSecondTick();
         setLEDS();                                      //if DEVICE is WAITING FOR DATALOGGER
         if(deviceStatus == _DEV_READY) { 
             while(!TRMT1);
@@ -198,6 +199,9 @@ void main(void) {
     //call configuration routines
     configureDevice();
     
+    //Restore the persistent vehicle odometer before normal operation.
+    Odometer_PersistenceInitialize();
+    
     //if initial configuration returns error
     if (deviceErrorCode != _DEV_ERROR_NOERROR) { 
         deviceStatus = _DEV_ERROR;
@@ -230,6 +234,9 @@ void main(void) {
 	{
         //clear WatchDog
         ClrWdt();
+
+        //checkpoint the odometer outside interrupt context when required
+        Odometer_ProcessPersistence();
 
         //process received data from the ECU
         if (RXbyte_received == 1) {

@@ -26,7 +26,11 @@ public static class DataLogging
 
     static private void processTPDO2(byte[] USBdata)
     {
-        // USBdata[6..8] = trip/distance bytes. Kept reserved for the board firmware.
+        uint odometerX100m = (uint)USBdata[6]
+                            | ((uint)USBdata[7] << 8)
+                            | ((uint)USBdata[8] << 16);
+
+        VehicleData.Odometer = odometerX100m / 10.0;
 
         VehicleData.IAT = (float)get_Temp(USBdata[9]);
         VehicleData.ECT = (float)get_Temp(USBdata[10]);

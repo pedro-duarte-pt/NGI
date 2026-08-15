@@ -27,6 +27,7 @@ public static class VehicleData
     private static int ECU_mil_val = 0;
     private static int ECU_PowerSteering_val = 0;
     private static float ECU_battery_val = 0f;
+    private static double ECU_odometer_val = 0.0;
 
     private static float ECU_IAT_val = 0f;
     private static float ECU_IAC_val = 0f;
@@ -134,6 +135,13 @@ public static class VehicleData
     {
         get => ECU_battery_val;
         set => ECU_battery_val = value;
+    }
+
+    /// <summary>Permanent vehicle odometer in kilometres.</summary>
+    public static double Odometer
+    {
+        get => ECU_odometer_val;
+        set => ECU_odometer_val = value;
     }
 
     /// <summary>Engine speed in rpm.</summary>

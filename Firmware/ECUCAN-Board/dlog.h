@@ -90,6 +90,9 @@ int isElegible(void);
 int getDLData(char);
 
 void Odometer_Update(unsigned char);
+void Odometer_PersistenceInitialize(void);
+void Odometer_PersistenceSecondTick(void);
+void Odometer_ProcessPersistence(void);
 void registerCEL(char);
 void load_bits(unsigned char, char);
 
@@ -97,5 +100,6 @@ extern unsigned char timeSlice;
 extern ECU_SENSOR_ENTRY ecuSensors[];
 extern unsigned char bitsized_data[];
 extern unsigned long odometerX100m;
+extern unsigned long odometerRemainderMeterMs;
 
 #endif	/* DATALOGGER_H */

@@ -1,40 +1,64 @@
-#if defined(__XC8)       
- #include <xc.h>           
-#endif   
+#if defined(__XC8)
+#include <xc.h>
+#endif
 
 #include "eeprom.h"
 
-void write_octet_eep(unsigned char address, unsigned char data)
+#define EEPROM_MAX_ADDRESS 0x03FFU
+
+static void set_eeprom_address(unsigned int address)
 {
-    while( EECON1bits.WR  )     // make sure it's not busy with an earlier write.
-    {}
-    EEADRH = 0x00;      //use only 8bit adddress. drop the 2 extra bits.
-    EEADR = address;
-    EEDATA = data;
-    EECON1bits.EEPGD = 0;   //access eeprom instead of program memory
-    EECON1bits.CFGS  = 0;   //Accesses Flash program or data EEPROM memory
-    EECON1bits.WREN  = 1;   //Allows write cycles to Flash program/data EEPROM
-    INTCONbits.GIE   = 0;
-    // required sequence start
-    EECON2 = 0x55;
-    EECON2 = 0xAA;
-    EECON1bits.WR    = 1;   //start Write
-    while( EECON1bits.WR  )     // wait for write instruction to end.
-    {} 
-    // required sequence end
-    INTCONbits.GIE   = 1;
-    EECON1bits.WREN  = 0;   //Disables write cycles to Flash program/data EEPROM
+    EEADRH = (unsigned char)((address >> 8) & 0x03U);
+    EEADR = (unsigned char)(address & 0x00FFU);
 }
 
-unsigned char read_octet_eep(unsigned char address)
+void write_octet_eep(unsigned int address, unsigned char data)
 {
-    while( EECON1bits.WR  )     // make sure it's not busy with an earlier write.
-    {}
-    EEADRH = 0x00;      //use only 8bit adddress. drop the 2 extra bits.
-    EEADR = address;
-    EECON1bits.EEPGD = 0;   //access eeprom instead of program memory
-    EECON1bits.CFGS  = 0;   //Accesses Flash program or data EEPROM memory
-    EECON1bits.RD    = 1;   //start Read
-    return( EEDATA );
+    unsigned char gieState;
+
+    if (address > EEPROM_MAX_ADDRESS) {
+        return;
+    }
+
+    while (EECON1bits.WR) {
+        /* Wait for any previous self-timed write to complete. */
+    }
+
+    set_eeprom_address(address);
+    EEDATA = data;
+    EECON1bits.EEPGD = 0;
+    EECON1bits.CFGS = 0;
+    EECON1bits.WREN = 1;
+
+    /* Only the required unlock/start sequence needs to be atomic. */
+    gieState = INTCONbits.GIE;
+    INTCONbits.GIE = 0;
+    EECON2 = 0x55;
+    EECON2 = 0xAA;
+    EECON1bits.WR = 1;
+    INTCONbits.GIE = gieState;
+
+    while (EECON1bits.WR) {
+        /* EEPROM write continues autonomously; interrupts may run here. */
+    }
+
+    EECON1bits.WREN = 0;
 }
- 
+
+unsigned char read_octet_eep(unsigned int address)
+{
+    if (address > EEPROM_MAX_ADDRESS) {
+        return 0xFFU;
+    }
+
+    while (EECON1bits.WR) {
+        /* Do not change EEPROM address registers during a write. */
+    }
+
+    set_eeprom_address(address);
+    EECON1bits.EEPGD = 0;
+    EECON1bits.CFGS = 0;
+    EECON1bits.RD = 1;
+
+    return EEDATA;
+}
