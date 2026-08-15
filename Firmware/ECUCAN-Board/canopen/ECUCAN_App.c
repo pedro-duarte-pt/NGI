@@ -118,7 +118,13 @@ const unsigned char TPDO2_objnum = 15;   //tpdo1 number of subindex entries on t
 const unsigned char TPDO2_defnum = 2;   //tpdo1 number of subindex entries on tpdo comms configs
 
 //runtime variables to store the status of all TPDOs
-TPDO TPDOs[CO_NUM_OF_TPDO];                   
+TPDO TPDOs[CO_NUM_OF_TPDO];
+
+/*
+ * Dedicated receive storage for each configured RPDO.
+ * CANopen PDO payloads are at most 8 bytes.
+ */
+static unsigned char RPDOReceiveBuffer[CO_NUM_OF_RPDO][8];                   
 
 /*********************************************************************
  * Function:        void ECUCAN_Initialize(void)
@@ -163,20 +169,13 @@ void ECUCAN_Initialize(void)
         }
     }
 	
-    //configure RPDOs
-/*     for (char i=0; i<CO_NUM_OF_RPDO; i++) {
-	// Convert to MCHP
-	//mTOOLS_CO2MCHP(mCOMM_GetNodeID().byte + (0xC0000200L+0x100L*i));
-	
-	// Store the COB
-	//mRPDOSetCOB((i+1), mTOOLS_GetCOBID());
-	
+    // Configure the RPDO endpoint provided by the current CANopen build.
+    // Additional RPDOs require their corresponding stack objects
+    // (uRPDOComm2/_uPDO2, etc.) to be enabled in the CANopen configuration.
+    mTOOLS_CO2MCHP(mCOMM_GetNodeID().byte + 0xC0000200L);
+    mRPDOSetCOB(1, mTOOLS_GetCOBID());
+    mRPDOSetRxPtr(1, &RPDOReceiveBuffer[0][0]);
 
-	// Set the pointer to the buffers (needs to be reviewed)
-	//mRPDOSetRxPtr((i+1), (unsigned char *)(&uLocalRcvBuffer[0]));      
-    }   
-  */  
-    
     //Load EPROM variables to RAM
     //loadDistance();
     
