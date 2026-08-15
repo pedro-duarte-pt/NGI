@@ -50,40 +50,40 @@ unsigned char bitsized_data[15] = {
         0x00, //AC
         0x00 //BRAKE
 };
-//datalogger entry:
-// DL command (0= disabled, 1=read RAM, 2=write RAM, 3=read ROM, 4=write ROM), ADDmsB, ADDlsB, every X polling period(s) (i.e. 1 = always, 2 = every 2 periods, 5 = every 5 periods, up to 10), sensor_value
-unsigned char datalogger[150] = {
-        0x02, 0x10, 0x00, 1, 0x00, //RPM LSB
-        0x02, 0x11, 0x00, 1, 0x00, //RPM MSB
-        0x02, 0x14, 0x00, 1, 0x00, //MAP
-        0x02, 0x15, 0x00, 1, 0x00, //TPS
-        0x02, 0x17, 0x00, 2, 0x00, //Injector LSB
-        0x02, 0x18, 0x00, 2, 0x00, //injector LSB
-        0x02, 0x1B, 0x00, 2, 0x00, //IAT
-        0x02, 0x1C, 0x00, 1, 0x00, //VSS
-        0x02, 0x1D, 0x00, 2, 0x00, //ECT
-        0x02, 0x1E, 0x00, 5, 0x00, //PA (not available)
-        0x02, 0x1F, 0x00, 5, 0x00, //IACV / BAT
-        0x02, 0x20, 0x00, 1, 0x00, //O2
-        0x02, 0x21, 0x00, 1, 0x00, //P0
-        0x02, 0x22, 0x00, 1, 0x00, //P1
-        0x02, 0x23, 0x00, 1, 0x00, //INPUT1
-        0x02, 0x24, 0x00, 1, 0x00, //INPUT2
-        0x02, 0x25, 0x00, 5, 0x00, //CEL W1 B1
-        0x02, 0x26, 0x00, 5, 0x00, //CEL W1 B2
-        0x02, 0x27, 0x00, 5, 0x00, //CEL W2 B1
-        0x02, 0x28, 0x00, 5, 0x00, //CEL W2 B2
-        0x01, 0x03, 0xC6, 5, 0x00, //ELD (not available)
-        0x01, 0x03, 0xC5, 5, 0x00, //Battery/IACV
-        0x01, 0x02, 0x4F, 1, 0x00, //Gear
-        0x00, 0x00, 0x00, 0, 0x00, //undefined
-        0x00, 0x00, 0x00, 0, 0x00, //undefined
-        0x00, 0x00, 0x00, 0, 0x00, //undefined
-        0x00, 0x00, 0x00, 0, 0x00, //undefined
-        0x00, 0x00, 0x00, 0, 0x00, //undefined
-        0x00, 0x00, 0x00, 0, 0x00, //undefined
-        0x00, 0x00, 0x00, 0, 0x00, //undefined
-       };
+// ECU acquisition entry:
+// command type, address MSB/command, address LSB, polling period, raw value
+ECU_SENSOR_ENTRY ecuSensors[_SENSOR_ENTRY_MAX + 1] = {
+        {0x02, 0x10, 0x00, 1, 0x00}, //RPM LSB
+        {0x02, 0x11, 0x00, 1, 0x00}, //RPM MSB
+        {0x02, 0x14, 0x00, 1, 0x00}, //MAP
+        {0x02, 0x15, 0x00, 1, 0x00}, //TPS
+        {0x02, 0x17, 0x00, 2, 0x00}, //Injector LSB
+        {0x02, 0x18, 0x00, 2, 0x00}, //Injector MSB
+        {0x02, 0x1B, 0x00, 2, 0x00}, //IAT
+        {0x02, 0x1C, 0x00, 1, 0x00}, //VSS
+        {0x02, 0x1D, 0x00, 2, 0x00}, //ECT
+        {0x02, 0x1E, 0x00, 5, 0x00}, //PA (not available)
+        {0x02, 0x1F, 0x00, 5, 0x00}, //IACV / BAT
+        {0x02, 0x20, 0x00, 1, 0x00}, //O2
+        {0x02, 0x21, 0x00, 1, 0x00}, //P0
+        {0x02, 0x22, 0x00, 1, 0x00}, //P1
+        {0x02, 0x23, 0x00, 1, 0x00}, //INPUT1
+        {0x02, 0x24, 0x00, 1, 0x00}, //INPUT2
+        {0x02, 0x25, 0x00, 5, 0x00}, //CEL W1 B1
+        {0x02, 0x26, 0x00, 5, 0x00}, //CEL W1 B2
+        {0x02, 0x27, 0x00, 5, 0x00}, //CEL W2 B1
+        {0x02, 0x28, 0x00, 5, 0x00}, //CEL W2 B2
+        {0x01, 0x03, 0xC6, 5, 0x00}, //ELD (not available)
+        {0x01, 0x03, 0xC5, 5, 0x00}, //Battery/IACV
+        {0x01, 0x02, 0x4F, 1, 0x00}, //Gear
+        {0x00, 0x00, 0x00, 0, 0x00}, //undefined
+        {0x00, 0x00, 0x00, 0, 0x00}, //undefined
+        {0x00, 0x00, 0x00, 0, 0x00}, //undefined
+        {0x00, 0x00, 0x00, 0, 0x00}, //undefined
+        {0x00, 0x00, 0x00, 0, 0x00}, //undefined
+        {0x00, 0x00, 0x00, 0, 0x00}, //undefined
+        {0x00, 0x00, 0x00, 0, 0x00}  //undefined
+};
 
 
 void startDL(void) {
@@ -129,18 +129,20 @@ void handleByte(char byte) {
 
 //check if sensor is elegible for this specific timeslice
 int isElegible() {
-    //if normal sensor
-    if (datalogger[dataIndex* (unsigned)_SENSOR_ENTRY_SIZE]!=0x00) {
-        //if sensor sampling period is according to this timeslice 
-        if ((timeSlice)%datalogger[dataIndex*(unsigned)_SENSOR_ENTRY_SIZE+(unsigned)_SENSOR_ENTRY_PERIOD_OFFSET] == 0) { return 1; }
-        else { return 0; }
+    if (ecuSensors[dataIndex].type == 0x00) {
+        return 0;
     }
-    else { return 0; }
+
+    if (ecuSensors[dataIndex].period == 0) {
+        return 0;
+    }
+
+    return ((timeSlice % ecuSensors[dataIndex].period) == 0);
 }
 
 void load_bits(unsigned char sensor, char answer) {
     switch (sensor) {
-            case _DL_P0: 
+            case _ECU_SENSOR_P0: 
                 bitsized_data[_DL_BIT_ACC] = (answer >> _DL_BIT_ACC_OFFSET) & 0x01;
                 bitsized_data[_DL_BIT_PCS] = (answer >> _DL_BIT_PCS_OFFSET) & 0x01;
                 bitsized_data[_DL_BIT_ALTC] = (answer >> _DL_BIT_ALTC_OFFSET) & 0x01;
@@ -148,16 +150,16 @@ void load_bits(unsigned char sensor, char answer) {
                 bitsized_data[_DL_BIT_IAB] = (answer >> _DL_BIT_IAB_OFFSET) & 0x01;
                 bitsized_data[_DL_BIT_FLR] = (answer >> _DL_BIT_FLR_OFFSET) & 0x01;
                 break;
-            case _DL_P1: 
+            case _ECU_SENSOR_P1: 
                 bitsized_data[_DL_BIT_VTEC1] = (answer >> _DL_BIT_VTEC1_OFFSET) & 0x01;
                 bitsized_data[_DL_BIT_VTEC2] = (answer >> _DL_BIT_VTEC2_OFFSET) & 0x01;
                 bitsized_data[_DL_BIT_MIL] = (answer >> _DL_BIT_MIL_OFFSET) & 0x01;
                 break;
-            case _DL_INPUT1: 
+            case _ECU_SENSOR_INPUT1: 
                 bitsized_data[_DL_BIT_PWRSTEER] = (answer >> _DL_BIT_PWRSTEER_OFFSET) & 0x01;
                 bitsized_data[_DL_BIT_SERVCON] = (answer >> _DL_BIT_SERVCON_OFFSET) & 0x01;
                 break;
-            case _DL_INPUT2: 
+            case _ECU_SENSOR_INPUT2: 
                 bitsized_data[_DL_BIT_STARTER] = (answer >> _DL_BIT_STARTER_OFFSET) & 0x01;
                 bitsized_data[_DL_BIT_VTP] = (answer >> _DL_BIT_VTP_OFFSET) & 0x01;
                 bitsized_data[_DL_BIT_AC] = (answer >> _DL_BIT_AC_OFFSET) & 0x01;
@@ -168,25 +170,24 @@ void load_bits(unsigned char sensor, char answer) {
 
 //store sensor information received from ECU
 int getDLData(char answer) {    
-    unsigned char sensor = (unsigned char) (dataIndex*_SENSOR_ENTRY_SIZE+_SENSOR_ENTRY_DATA_OFFSET); 
-    //Test
-    datalogger[sensor] = answer;
+    unsigned char sensor = dataIndex;
+    ecuSensors[sensor].value = (unsigned char)answer;
         
     //handle special sensors
     switch (sensor) {
-        case _DL_VSS:  
+        case _ECU_SENSOR_VSS:  
             calcDistance(answer); break;
-        case _DL_INJ_HB: 
+        case _ECU_SENSOR_INJ_HB: 
             calcConsumption(answer); break;
-        case _DL_P0: 
-        case _DL_P1: 
-        case _DL_INPUT1: 
-        case _DL_INPUT2: 
+        case _ECU_SENSOR_P0: 
+        case _ECU_SENSOR_P1: 
+        case _ECU_SENSOR_INPUT1: 
+        case _ECU_SENSOR_INPUT2: 
             load_bits(sensor,answer); break;
-        case _DL_CEL1: 
-        case _DL_CEL2: 
-        case _DL_CEL3: 
-        case _DL_CEL4: registerCEL(answer); break;
+        case _ECU_SENSOR_CEL1: 
+        case _ECU_SENSOR_CEL2: 
+        case _ECU_SENSOR_CEL3: 
+        case _ECU_SENSOR_CEL4: registerCEL(answer); break;
     }
     
     //TODO: for multi-byte answers, get next byte
@@ -281,8 +282,8 @@ void resetDistance(void) {
 
 
 void calcConsumption(char data) {
-    int RPM_tmp = (datalogger[_DL_RPM_HB]<<8)+datalogger[_DL_RPM_LB];
-    int inj_ms = (datalogger[_DL_INJ_HB]<<8)+datalogger[_DL_INJ_LB];
+    int RPM_tmp = (ecuSensors[_ECU_SENSOR_RPM_HB].value<<8)+ecuSensors[_ECU_SENSOR_RPM_LB].value;
+    int inj_ms = (ecuSensors[_ECU_SENSOR_INJ_HB].value<<8)+ecuSensors[_ECU_SENSOR_INJ_LB].value;
     if (RPM_tmp>0) {
         int RPM = (int) 1875000/RPM_tmp;
         if (INJ_sampling_interval>0) {
@@ -310,30 +311,28 @@ void registerCEL(char data) {
 
 //select next eligible sensor and query the ECU
 int askDLData() {
-    char sensor_pos;
-    for (;dataIndex<_SENSOR_ENTRY_MAX;dataIndex++) { if (isElegible()) { 
-        sensor_pos = dataIndex*(unsigned)_SENSOR_ENTRY_SIZE;
-        break; 
-    } }
-    
-    if (dataIndex==_SENSOR_ENTRY_MAX) { return 0; } 
-    
-    //if eligible and standard command
-      if (datalogger[(unsigned char)(sensor_pos+_SENSOR_ENTRY_TYPE_OFFSET)]==_SENSOR_ENTRY_TYPE_PRESET) {
-        //get Sensor Data
-        sendRS232Data(datalogger[sensor_pos+(unsigned)_SENSOR_ENTRY_ADD1_OFFSET]);
+    for (; dataIndex < _SENSOR_ENTRY_MAX; dataIndex++) {
+        if (isElegible()) {
+            break;
+        }
     }
-    else if (datalogger[(unsigned char)(sensor_pos+_SENSOR_ENTRY_TYPE_OFFSET)]==_SENSOR_ENTRY_TYPE_SPECIFIC_RAM) 
-    {
-        //get Sensor Data, specify RAM ADDRESS FETCH MODE
-        sendRS232Data(datalogger[sensor_pos+(unsigned)_SENSOR_ENTRY_TYPE_OFFSET]);
-        //get Sensor Data, specify RAM ADDRESS MSB
-        sendRS232Data(datalogger[sensor_pos+(unsigned)_SENSOR_ENTRY_ADD1_OFFSET]);
-        //get Sensor Data, specify RAM ADDRESS LSB
-        sendRS232Data(datalogger[sensor_pos+(unsigned)_SENSOR_ENTRY_ADD2_OFFSET]); 
+
+    if (dataIndex == _SENSOR_ENTRY_MAX) {
+        return 0;
     }
-    else { return 1; }
-    
+
+    if (ecuSensors[dataIndex].type == _SENSOR_ENTRY_TYPE_PRESET) {
+        sendRS232Data(ecuSensors[dataIndex].address1);
+    }
+    else if (ecuSensors[dataIndex].type == _SENSOR_ENTRY_TYPE_SPECIFIC_RAM) {
+        sendRS232Data(ecuSensors[dataIndex].type);
+        sendRS232Data(ecuSensors[dataIndex].address1);
+        sendRS232Data(ecuSensors[dataIndex].address2);
+    }
+    else {
+        return 1;
+    }
+
     return 0;
 }
 

@@ -13,29 +13,29 @@
  ********************************************************************/
 #define		DICTIONARY_STANDARD_1							\
 			{0x6000,0x00,_RW,8,{(const unsigned char *)&TPDO1_objnum}},		\
-			{0x6000,0x01,_RW,8,{(const unsigned char *)&datalogger[_DL_VSS]}},		\
-			{0x6000,0x02,_RW,8,{(const unsigned char *)&datalogger[_DL_INJ_LB]}},		\
-			{0x6000,0x03,_RW,8,{(const unsigned char *)&datalogger[_DL_INJ_HB]}},		\
-			{0x6000,0x04,_RW,8,{(const unsigned char *)&datalogger[_DL_O2]}},         \
-			{0x6000,0x05,_RW,8,{(const unsigned char *)&datalogger[_DL_TPS]}},		\
-			{0x6000,0x06,_RW,8,{(const unsigned char *)&datalogger[_DL_RPM_LB]}},		\
-			{0x6000,0x07,_RW,8,{(const unsigned char *)&datalogger[_DL_RPM_HB]}},		\
-			{0x6000,0x08,_RW,8,{(const unsigned char *)&datalogger[_DL_MAP]}},		\
-			{0x6000,0x09,_RW,8,{(const unsigned char *)&datalogger[_DL_IAT]}},		\
-			{0x6000,0x0A,_RW,8,{(const unsigned char *)&datalogger[_DL_ECT]}},		\
-			{0x6000,0x0B,_RW,8,{(const unsigned char *)&datalogger[_DL_PA]}},		\
-			{0x6000,0x0C,_RW,8,{(const unsigned char *)&datalogger[_DL_IAC]}},		\
-			{0x6000,0x0D,_RW,8,{(const unsigned char *)&datalogger[_DL_P0]}},		\
-			{0x6000,0x0E,_RW,8,{(const unsigned char *)&datalogger[_DL_P1]}},		\
-			{0x6000,0x0F,_RW,8,{(const unsigned char *)&datalogger[_DL_INPUT1]}},		\
-			{0x6000,0x10,_RW,8,{(const unsigned char *)&datalogger[_DL_INPUT2]}},		\
-			{0x6000,0x11,_RW,8,{(const unsigned char *)&datalogger[_DL_CEL1]}},		\
-			{0x6000,0x12,_RW,8,{(const unsigned char *)&datalogger[_DL_CEL2]}},		\
-			{0x6000,0x13,_RW,8,{(const unsigned char *)&datalogger[_DL_CEL3]}},		\
-			{0x6000,0x14,_RW,8,{(const unsigned char *)&datalogger[_DL_CEL4]}},		\
-			{0x6000,0x15,_RW,8,{(const unsigned char *)&datalogger[_DL_BAT]}},		\
-			{0x6000,0x16,_RW,4,{(const unsigned char *)&datalogger[_DL_GEAR]}},		\
-			{0x6000,0x17,_RW,8,{(const unsigned char *)&datalogger[_DL_ELD]}},		\
+			{0x6000,0x01,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_VSS].value}},		\
+			{0x6000,0x02,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_INJ_LB].value}},		\
+			{0x6000,0x03,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_INJ_HB].value}},		\
+			{0x6000,0x04,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_O2].value}},         \
+			{0x6000,0x05,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_TPS].value}},		\
+			{0x6000,0x06,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_RPM_LB].value}},		\
+			{0x6000,0x07,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_RPM_HB].value}},		\
+			{0x6000,0x08,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_MAP].value}},		\
+			{0x6000,0x09,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_IAT].value}},		\
+			{0x6000,0x0A,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_ECT].value}},		\
+			{0x6000,0x0B,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_PA].value}},		\
+			{0x6000,0x0C,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_IAC].value}},		\
+			{0x6000,0x0D,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_P0].value}},		\
+			{0x6000,0x0E,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_P1].value}},		\
+			{0x6000,0x0F,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_INPUT1].value}},		\
+			{0x6000,0x10,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_INPUT2].value}},		\
+			{0x6000,0x11,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_CEL1].value}},		\
+			{0x6000,0x12,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_CEL2].value}},		\
+			{0x6000,0x13,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_CEL3].value}},		\
+			{0x6000,0x14,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_CEL4].value}},		\
+			{0x6000,0x15,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_BAT].value}},		\
+			{0x6000,0x16,_RW,4,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_GEAR].value}},		\
+			{0x6000,0x17,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_ELD].value}},		\
 			{0x6000,0x18,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_ACC]}},		\
 			{0x6000,0x19,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_PCS]}},		\
 			{0x6000,0x1A,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_ALTC]}},		\

@@ -2,12 +2,16 @@
 #ifndef DATALOGGER_H
 #define	DATALOGGER_H
 
+typedef struct
+{
+    unsigned char type;
+    unsigned char address1;
+    unsigned char address2;
+    unsigned char period;
+    unsigned char value;
+} ECU_SENSOR_ENTRY;
+
 #define _SENSOR_ENTRY_SIZE 5
-#define _SENSOR_ENTRY_TYPE_OFFSET 0
-#define _SENSOR_ENTRY_ADD1_OFFSET 1
-#define _SENSOR_ENTRY_ADD2_OFFSET 2
-#define _SENSOR_ENTRY_PERIOD_OFFSET 3
-#define _SENSOR_ENTRY_DATA_OFFSET 4
 
 #define _SENSOR_ENTRY_MAX 29
 
@@ -16,29 +20,29 @@
 
 #define _SAMPLING_PERIOD 0.2		//sampling interval in ms
 
-#define _DL_RPM_LB 4
-#define _DL_RPM_HB 9
-#define _DL_MAP 14
-#define _DL_TPS 19
-#define _DL_INJ_LB 24
-#define _DL_INJ_HB 29
-#define _DL_IAT 34
-#define _DL_VSS 39
-#define _DL_ECT 44
-#define _DL_PA 49
-#define _DL_IAC 54
-#define _DL_O2 59
-#define _DL_P0 64
-#define _DL_P1 69
-#define _DL_INPUT1 74
-#define _DL_INPUT2 79
-#define _DL_CEL1 84
-#define _DL_CEL2 89
-#define _DL_CEL3 94
-#define _DL_CEL4 99
-#define _DL_ELD 104
-#define _DL_BAT 109
-#define _DL_GEAR 114
+#define _ECU_SENSOR_RPM_LB   0
+#define _ECU_SENSOR_RPM_HB   1
+#define _ECU_SENSOR_MAP      2
+#define _ECU_SENSOR_TPS      3
+#define _ECU_SENSOR_INJ_LB   4
+#define _ECU_SENSOR_INJ_HB   5
+#define _ECU_SENSOR_IAT      6
+#define _ECU_SENSOR_VSS      7
+#define _ECU_SENSOR_ECT      8
+#define _ECU_SENSOR_PA       9
+#define _ECU_SENSOR_IAC      10
+#define _ECU_SENSOR_O2       11
+#define _ECU_SENSOR_P0       12
+#define _ECU_SENSOR_P1       13
+#define _ECU_SENSOR_INPUT1   14
+#define _ECU_SENSOR_INPUT2   15
+#define _ECU_SENSOR_CEL1     16
+#define _ECU_SENSOR_CEL2     17
+#define _ECU_SENSOR_CEL3     18
+#define _ECU_SENSOR_CEL4     19
+#define _ECU_SENSOR_ELD      20
+#define _ECU_SENSOR_BAT      21
+#define _ECU_SENSOR_GEAR     22
 
 #define _DL_BIT_ACC 0
 #define _DL_BIT_PCS 1
@@ -98,7 +102,7 @@ void registerCEL(char);
 void load_bits(unsigned char, char);
 
 extern unsigned char timeSlice;
-extern unsigned char datalogger[];
+extern ECU_SENSOR_ENTRY ecuSensors[];
 extern unsigned char bitsized_data[];
 extern unsigned int INJ_sampling_interval;
 extern unsigned int VSS_sampling_interval;
