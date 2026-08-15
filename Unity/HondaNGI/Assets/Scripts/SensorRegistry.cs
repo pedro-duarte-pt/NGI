@@ -113,6 +113,42 @@ public static class SensorRegistry
             "engine", "fuel", "injector"));
 
         Register(new SensorDefinition(
+            id: "engine.injector.duty_cycle",
+            name: "Injector Duty Cycle",
+            shortName: "INJ DUTY",
+            unit: "%",
+            kind: SensorKind.Continuous,
+            min: 0f,
+            max: 100f,
+            decimals: 1,
+            valueGetter: () => VehicleCalculations.InjectorDutyCycle,
+            "engine", "fuel", "injector", "derived"));
+
+        Register(new SensorDefinition(
+            id: "engine.fuel.rate",
+            name: "Fuel Rate",
+            shortName: "FUEL",
+            unit: "L/h",
+            kind: SensorKind.Continuous,
+            min: 0f,
+            max: 100f,
+            decimals: 2,
+            valueGetter: () => VehicleCalculations.FuelRateLitresPerHour,
+            "engine", "fuel", "consumption", "derived"));
+
+        Register(new SensorDefinition(
+            id: "engine.fuel.consumption",
+            name: "Fuel Consumption",
+            shortName: "CONS",
+            unit: "L/100 km",
+            kind: SensorKind.Continuous,
+            min: 0f,
+            max: 100f,
+            decimals: 1,
+            valueGetter: () => VehicleCalculations.FuelConsumptionLitresPer100Km,
+            "engine", "fuel", "consumption", "derived"));
+
+        Register(new SensorDefinition(
             id: "engine.cooling.fan",
             name: "Cooling Fan",
             shortName: "FAN",
@@ -245,6 +281,18 @@ public static class SensorRegistry
             decimals: 1,
             valueGetter: () => VehicleData.Speed,
             "drivetrain", "speed", "vehicle"));
+
+        Register(new SensorDefinition(
+            id: "drivetrain.odometer",
+            name: "Vehicle Odometer",
+            shortName: "ODO",
+            unit: "km",
+            kind: SensorKind.Continuous,
+            min: 0f,
+            max: 1677721.5f,
+            decimals: 1,
+            valueGetter: () => (float)VehicleData.Odometer,
+            "drivetrain", "distance", "odometer", "vehicle"));
 
         Register(new SensorDefinition(
             id: "drivetrain.transmission.gear",

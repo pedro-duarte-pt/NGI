@@ -5,5 +5,6 @@ public static class WidgetFactory {
  case"sensor":{string id=d.PropString("sensor");var s=SensorRegistry.Get(id);if(s==null){Debug.LogError("Unknown sensor: "+id);return null;}return new SensorWidget(s,d.PropString("traceColor"),c?.Styles);}
  case"text":return new TextWidget(d.PropString("text"));
  case"sensorTrace":return new SensorTraceWidget(d,c?.Styles);
+ case"conditionalSensor":return new ConditionalSensorWidget(d,c?.Styles);
  case"image":return new ImageWidget(d,c);
  default:Debug.LogWarning("Unsupported widget type: "+d.Type);return null;}}}
