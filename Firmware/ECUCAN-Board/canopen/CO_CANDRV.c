@@ -390,7 +390,7 @@ int _CANSetBitRate(void)
         if ((_fosc%(busspeed*2*i))==0) {
             if ((_fosc/(busspeed*2*i))>0) {
                 TQ = i;
-                brp = (_fosc/(busspeed*2*i))-1;
+                brp = (unsigned char)((_fosc/(busspeed*2*i))-1UL);
             }
         }
     }
@@ -416,12 +416,12 @@ int _CANSetBitRate(void)
     }
     
     //estimate ideal value for prop_seg and seg1
-    prop_seg = (unsigned) ((TQ-1-min_s2)/2);
-    seg1 = (unsigned) (TQ-1-min_s2-prop_seg);
+    prop_seg = (unsigned char)((TQ-1U-min_s2)/2U);
+    seg1 = (unsigned char)(TQ-1U-min_s2-prop_seg);
 
-    BRGCON1 = 0x40|(unsigned) brp;  //SJW = 2TQ; calculated BRP
-    BRGCON2 = 0xC0|(unsigned) ((seg1-1)*8+(prop_seg-1)); //
-    BRGCON3 = 0x80|(unsigned) (min_s2-1);
+    BRGCON1 = (unsigned char)(0x40U | brp);  //SJW = 2TQ; calculated BRP
+    BRGCON2 = (unsigned char)(0xC0U | ((seg1-1U)*8U+(prop_seg-1U))); //
+    BRGCON3 = (unsigned char)(0x80U | (min_s2-1U));
     
     return 0;
 }

@@ -12,48 +12,48 @@
  * indices in this definition must range from 0x6000 to 0x6FFF. 
  ********************************************************************/
 #define		DICTIONARY_STANDARD_1							\
-			{0x6000,0x00,_RW,8,{(const unsigned char *)&TPDO1_objnum}},		\
-			{0x6000,0x01,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_VSS].value}},		\
-			{0x6000,0x02,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_INJ_LB].value}},		\
-			{0x6000,0x03,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_INJ_HB].value}},		\
-			{0x6000,0x04,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_O2].value}},         \
-			{0x6000,0x05,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_TPS].value}},		\
-			{0x6000,0x06,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_RPM_LB].value}},		\
-			{0x6000,0x07,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_RPM_HB].value}},		\
-			{0x6000,0x08,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_MAP].value}},		\
-			{0x6000,0x09,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_IAT].value}},		\
-			{0x6000,0x0A,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_ECT].value}},		\
-			{0x6000,0x0B,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_PA].value}},		\
-			{0x6000,0x0C,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_IAC].value}},		\
-			{0x6000,0x0D,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_P0].value}},		\
-			{0x6000,0x0E,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_P1].value}},		\
-			{0x6000,0x0F,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_INPUT1].value}},		\
-			{0x6000,0x10,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_INPUT2].value}},		\
-			{0x6000,0x11,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_CEL1].value}},		\
-			{0x6000,0x12,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_CEL2].value}},		\
-			{0x6000,0x13,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_CEL3].value}},		\
-			{0x6000,0x14,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_CEL4].value}},		\
-			{0x6000,0x15,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_BAT].value}},		\
-			{0x6000,0x16,_RW,4,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_GEAR].value}},		\
-			{0x6000,0x17,_RW,8,{(const unsigned char *)&ecuSensors[_ECU_SENSOR_ELD].value}},		\
-			{0x6000,0x18,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_ACC]}},		\
-			{0x6000,0x19,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_PCS]}},		\
-			{0x6000,0x1A,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_ALTC]}},		\
-			{0x6000,0x1B,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_FANC]}},		\
-			{0x6000,0x1C,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_IAB]}},		\
-			{0x6000,0x1D,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_FLR]}},		\
-			{0x6000,0x1E,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_VTEC1]}},		\
-			{0x6000,0x1F,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_VTEC2]}},		\
-			{0x6000,0x20,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_MIL]}},		\
-			{0x6000,0x21,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_PWRSTEER]}},		\
-			{0x6000,0x22,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_SERVCON]}},		\
-			{0x6000,0x23,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_STARTER]}},		\
-			{0x6000,0x24,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_VTP]}},		\
-			{0x6000,0x25,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_AC]}},		\
-			{0x6000,0x26,_RW,1,{(const unsigned char *)&bitsized_data[_DL_BIT_BRAKE]}},      \
-			{0x6000,0x27,_RW,8,{(const unsigned char *)&odometerX100m}},      \
-			{0x6000,0x28,_RW,8,{(const unsigned char *)(&odometerX100m) + 1}},      \
-			{0x6000,0x29,_RW,8,{(const unsigned char *)(&odometerX100m) + 2}}
+			{0x6000,0x00,_RW,8,(const unsigned char *)&TPDO1_objnum},		\
+			{0x6000,0x01,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_VSS].value},		\
+			{0x6000,0x02,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_INJ_LB].value},		\
+			{0x6000,0x03,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_INJ_HB].value},		\
+			{0x6000,0x04,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_O2].value},         \
+			{0x6000,0x05,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_TPS].value},		\
+			{0x6000,0x06,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_RPM_LB].value},		\
+			{0x6000,0x07,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_RPM_HB].value},		\
+			{0x6000,0x08,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_MAP].value},		\
+			{0x6000,0x09,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_IAT].value},		\
+			{0x6000,0x0A,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_ECT].value},		\
+			{0x6000,0x0B,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_PA].value},		\
+			{0x6000,0x0C,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_IAC].value},		\
+			{0x6000,0x0D,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_P0].value},		\
+			{0x6000,0x0E,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_P1].value},		\
+			{0x6000,0x0F,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_INPUT1].value},		\
+			{0x6000,0x10,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_INPUT2].value},		\
+			{0x6000,0x11,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_CEL1].value},		\
+			{0x6000,0x12,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_CEL2].value},		\
+			{0x6000,0x13,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_CEL3].value},		\
+			{0x6000,0x14,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_CEL4].value},		\
+			{0x6000,0x15,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_BAT].value},		\
+			{0x6000,0x16,_RW,4,(const unsigned char *)&ecuSensors[_ECU_SENSOR_GEAR].value},		\
+			{0x6000,0x17,_RW,8,(const unsigned char *)&ecuSensors[_ECU_SENSOR_ELD].value},		\
+			{0x6000,0x18,_RW,1,(const unsigned char *)&bitsized_data[_DL_BIT_ACC]},		\
+			{0x6000,0x19,_RW,1,(const unsigned char *)&bitsized_data[_DL_BIT_PCS]},		\
+			{0x6000,0x1A,_RW,1,(const unsigned char *)&bitsized_data[_DL_BIT_ALTC]},		\
+			{0x6000,0x1B,_RW,1,(const unsigned char *)&bitsized_data[_DL_BIT_FANC]},		\
+			{0x6000,0x1C,_RW,1,(const unsigned char *)&bitsized_data[_DL_BIT_IAB]},		\
+			{0x6000,0x1D,_RW,1,(const unsigned char *)&bitsized_data[_DL_BIT_FLR]},		\
+			{0x6000,0x1E,_RW,1,(const unsigned char *)&bitsized_data[_DL_BIT_VTEC1]},		\
+			{0x6000,0x1F,_RW,1,(const unsigned char *)&bitsized_data[_DL_BIT_VTEC2]},		\
+			{0x6000,0x20,_RW,1,(const unsigned char *)&bitsized_data[_DL_BIT_MIL]},		\
+			{0x6000,0x21,_RW,1,(const unsigned char *)&bitsized_data[_DL_BIT_PWRSTEER]},		\
+			{0x6000,0x22,_RW,1,(const unsigned char *)&bitsized_data[_DL_BIT_SERVCON]},		\
+			{0x6000,0x23,_RW,1,(const unsigned char *)&bitsized_data[_DL_BIT_STARTER]},		\
+			{0x6000,0x24,_RW,1,(const unsigned char *)&bitsized_data[_DL_BIT_VTP]},		\
+			{0x6000,0x25,_RW,1,(const unsigned char *)&bitsized_data[_DL_BIT_AC]},		\
+			{0x6000,0x26,_RW,1,(const unsigned char *)&bitsized_data[_DL_BIT_BRAKE]},      \
+			{0x6000,0x27,_RW,8,(const unsigned char *)&odometerX100m},      \
+			{0x6000,0x28,_RW,8,(const unsigned char *)(&odometerX100m) + 1},      \
+			{0x6000,0x29,_RW,8,(const unsigned char *)(&odometerX100m) + 2}
 
 //need to test the &odometerX100m offset entres
 
@@ -62,22 +62,22 @@
  * indices in this definition must range from 0x7000 to 0x7FFF. 
  ********************************************************************/
 #define		DICTIONARY_STANDARD_2							\
-			{0x7000,0x00,0,1,{(const unsigned char *)__dummy}},			\
-			{0x7000,0x00,0,1,{(const unsigned char *)__dummy}}
+			{0x7000,0x00,0,1,(const unsigned char *)__dummy},			\
+			{0x7000,0x00,0,1,(const unsigned char *)__dummy}
 
 /*********************************************************************
  * This memory region defines standard objects. All the 
  * indices in this definition must range from 0x8000 to 0x8FFF. 
  ********************************************************************/
 #define		DICTIONARY_STANDARD_3							\
-			{0x8000,0x00,0,1,{(const unsigned char *)__dummy}},			\
-			{0x8000,0x00,0,1,{(const unsigned char *)__dummy}}
+			{0x8000,0x00,0,1,(const unsigned char *)__dummy},			\
+			{0x8000,0x00,0,1,(const unsigned char *)__dummy}
 
 /*********************************************************************
  * This memory region defines standard objects. All the 
  * indices in this definition must range from 0x9000 to 0x9FFF. 
  ********************************************************************/
 #define		DICTIONARY_STANDARD_4							\
-			{0x9000,0x00,0,1,{(const unsigned char *)__dummy}},			\
-			{0x9000,0x00,0,1,{(const unsigned char *)__dummy}}
+			{0x9000,0x00,0,1,(const unsigned char *)__dummy},			\
+			{0x9000,0x00,0,1,(const unsigned char *)__dummy}
 				

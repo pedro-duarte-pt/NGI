@@ -189,7 +189,7 @@ void _CO_COB_CANopen2MCHP(void)
 		_uCOB_ID_out.bytes.B3.byte = _uCOB_ID_out.bytes.B1.byte;
 		
 		// Generate SIDL
-		_uCOB_ID_out.bytes.B1.byte = (unsigned) ((_uCOB_ID_out.bytes.B0.byte & 0xE0) | (_uCOB_ID_in.bytes.B2.byte & 0x03)) | 0x08;
+		_uCOB_ID_out.bytes.B1.byte = (unsigned char)(((_uCOB_ID_out.bytes.B0.byte & 0xE0U) | (_uCOB_ID_in.bytes.B2.byte & 0x03U)) | 0x08U);
 		
 		// Copy SIDH
 		_uCOB_ID_out.bytes.B0.byte = _uCOB_ID_out.bytes.B3.byte;
@@ -260,10 +260,10 @@ void _CO_COB_MCHP2CANopen(void)
 				
 		*(unsigned int *)(&_uCOB_ID_out.bytes.B2.byte) = ((*(unsigned int *)(&_uCOB_ID_out.bytes.B2.byte)) >> 3);
 		
-		_uCOB_ID_out.bytes.B3.byte = (unsigned) _uCOB_ID_out.bytes.B3.byte | 0x20;
+		_uCOB_ID_out.bytes.B3.byte = (unsigned char)(_uCOB_ID_out.bytes.B3.byte | 0x20U);
 
 		// Get the last two bits to complete upper low
-		_uCOB_ID_out.bytes.B2.byte = (unsigned) ((_uCOB_ID_out.bytes.B2.byte & 0xFC) | (_uCOB_ID_in.bytes.B1.byte & 0x03));
+		_uCOB_ID_out.bytes.B2.byte = (unsigned char)((_uCOB_ID_out.bytes.B2.byte & 0xFCU) | (_uCOB_ID_in.bytes.B1.byte & 0x03U));
 		
 		// Get high
 		_uCOB_ID_out.bytes.B0.byte = _uCOB_ID_in.bytes.B3.byte;

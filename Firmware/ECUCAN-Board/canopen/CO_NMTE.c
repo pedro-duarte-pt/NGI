@@ -122,7 +122,10 @@ void _CO_COMM_NMTE_HeartBeatAccessEvent(void)
 				_uNMTETimer = _uNMTEGuardTime.word * _uNMTELifeFactor.byte;
 			}
 			break;
-	}	
+
+        default:
+            break;
+}	
 }
 
 
@@ -177,7 +180,10 @@ void _CO_COMM_NMTE_GuardTimeAccessEvent(void)
 				_uNMTETimer = _uNMTEGuardTime.word * _uNMTELifeFactor.byte;
 			}		
 			break;
-	}	
+
+        default:
+            break;
+}	
 }
 
 
@@ -231,7 +237,10 @@ void _CO_COMM_NMTE_LifeFactorAccessEvent(void)
 				_uNMTETimer = _uNMTEGuardTime.word * _uNMTELifeFactor.byte;
 			}		
 			break;
-	}	
+
+        default:
+            break;
+}	
 }
 
 
@@ -383,7 +392,7 @@ void _CO_COMM_NMTE_TXEvent(void)
 		{
 			// Toggle and strip old state (also known as bootup state)
 			_uNMTELocalState.byte = _uNMTELocalState.byte & (unsigned) 0x80;
-			if (NMTE_NODE_GUARD_EN) {_uNMTELocalState.bits.b7 = (unsigned) (~_uNMTELocalState.bits.b7);}
+			if (NMTE_NODE_GUARD_EN) {_uNMTELocalState.bits.b7 = (unsigned char)(!_uNMTELocalState.bits.b7);}
 			else {_uNMTELocalState.bits.b7 = 0;}
 
 			// Set the data

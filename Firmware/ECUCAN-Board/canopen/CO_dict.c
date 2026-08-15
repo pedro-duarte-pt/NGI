@@ -596,7 +596,7 @@ unsigned char get_PDO_entries(char PDOnum) {
 void set_PDO_len(char PDOnum, unsigned char bitsTotal) {
     unsigned char len = 0;
     
-    //se o total de bits não é multiplo de 8
+    //se o total de bits nï¿½o ï¿½ multiplo de 8
     if (bitsTotal&0x07) {  len = (unsigned char) ((bitsTotal>>3)+1);}
     else {  len = (unsigned char) (bitsTotal>>3);}
     
@@ -670,12 +670,12 @@ unsigned char _CO_DictFillMapping(_PDOBUF pdo, char PDOnum) {
                     switch (uDict.obj->ctl) //not supporting EEPROM atm
                     {						
                         case CONST:
-                            _entryLen = uDict.obj->len;
+                            _entryLen = (unsigned char)uDict.obj->len;
                             buf_data = *(unsigned char const *) (unsigned int) (uDict.obj->p.pROM);
                             break;
                         case _RW:
                         case RO:
-                            _entryLen = uDict.obj->len;
+                            _entryLen = (unsigned char)uDict.obj->len;
                             buf_data = *(unsigned char *) (unsigned int) (uDict.obj->p.pRAM);
                             break;
                         default: 
@@ -701,7 +701,7 @@ unsigned char _CO_DictFillMapping(_PDOBUF pdo, char PDOnum) {
                 if (_entryLen>0) {  
                     _totalLen += _entryLen;
                     
-                    bitMask = ( (unsigned int) 1 << _entryLen)-1;
+                    bitMask = (unsigned char)(((unsigned int)1U << _entryLen)-1U);
                     buf_data = buf_data & bitMask;
                     
                     //offset the data bits and load to first buffer if needed

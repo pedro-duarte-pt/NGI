@@ -125,7 +125,7 @@ void _CO_COMM_PDO1_Close(void)
 void _CO_COMM_PDO1_RXEvent(void)
 {
 	*((_DATA8 *)(_uPDO1.RPDO.buf)) = *((_DATA8 *)(mCANGetPtrRxData()));
-	_uPDO1.RPDO.len = (unsigned) mCANGetDataLen();
+	_uPDO1.RPDO.len = (unsigned char)mCANGetDataLen();
 }
 
 

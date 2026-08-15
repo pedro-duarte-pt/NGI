@@ -195,7 +195,10 @@ void _CO_COMM_SYNC_COBIDAccessEvent(void)
 			else {mCO_DictSetRet(E_PARAM_RANGE);}
 				
 			break;
-	}	
+
+        default:
+            break;
+}	
 }
 
 

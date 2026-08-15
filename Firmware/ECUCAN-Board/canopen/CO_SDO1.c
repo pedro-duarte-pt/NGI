@@ -147,7 +147,10 @@ void _CO_COMM_SDO1_CS_COBIDAccessEvent(void)
 			// Return the COBID
 			*(unsigned long *)(uDict.obj->pReqBuf) = mTOOLS_GetCOBID();				
 			break;
-	}	
+
+        default:
+            break;
+}	
 }
 
 
@@ -179,7 +182,10 @@ void _CO_COMM_SDO1_SC_COBIDAccessEvent(void)
 			// Return the COBID
 			*(unsigned long *)(uDict.obj->pReqBuf) = mTOOLS_GetCOBID();				
 			break;
-	}
+
+        default:
+            break;
+}
 }
 
 
@@ -337,6 +343,9 @@ void _CO_COMM_SDO1_TXEvent(void)
 
 		switch (_uSDO1ACode)
 		{
+            case E_SUCCESS:
+                break;
+
 		
 			case E_TOGGLE:						// Toggle not alternated
 				*(unsigned long *)(mCANGetPtrTxData() + 4) = 0x05030000L;
@@ -509,7 +518,7 @@ void _CO_COMM_SDO1_RXEvent(void)
 					}					
 					
 					// Set the next expected toggle
-					_uSDO1State.bits.tog = (unsigned) ~_uSDO1State.bits.tog;
+					_uSDO1State.bits.tog = (unsigned char)(!_uSDO1State.bits.tog);
 					
 					// Set the header to respond, b'001t0000
 					_uSDO1TxBuf[0] = (_uSDO1Ctl.byte | (unsigned) 0x20) & 0xF0;
@@ -826,7 +835,7 @@ void _CO_COMM_SDO1_RXEvent(void)
 					_uSDO1Dict.reqOffst += _uSDO1Dict.reqLen;
 					
 					// Set the next expected toggle
-					_uSDO1State.bits.tog = (unsigned) ~_uSDO1State.bits.tog;
+					_uSDO1State.bits.tog = (unsigned char)(!_uSDO1State.bits.tog);
 			
 					// Queue to send the data
 					_uSDO1ACode = mCO_DictGetRet();
