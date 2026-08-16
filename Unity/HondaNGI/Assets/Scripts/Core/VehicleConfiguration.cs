@@ -1,17 +1,66 @@
+using System;
+
 /// <summary>
-/// Persistent vehicle-specific configuration.
-///
-/// These defaults describe the current B16A2/P30 setup. A future Settings
-/// screen can edit/persist these values without changing the calculation API.
+/// Physical vehicle configuration used by application-level calculations.
 /// </summary>
 public static class VehicleConfiguration
 {
-    /// <summary>Number of engine cylinders.</summary>
-    public static int CylinderCount { get; set; } = 4;
+    public static int CylinderCount = 4;
+    public static int InjectorCount = 4;
+    public static float InjectorFlowCcPerMin = 240f;
 
-    /// <summary>Number of fuel injectors used by the fuel-rate calculation.</summary>
-    public static int InjectorCount { get; set; } = 4;
+    // OEM VSS reference tire: 185/65 R14.
+    public static TireConfiguration OemTires = new TireConfiguration
+    {
+        Make = "",
+        Model = "",
+        WidthMm = 185,
+        AspectRatio = 65,
+        WheelDiameterInches = 14f,
+        LoadIndex = 0,
+        SpeedRating = "",
+        RollingCircumferenceMm = 0f
+    };
 
-    /// <summary>Nominal injector flow at the injector's rated differential pressure, in cc/min.</summary>
-    public static float InjectorFlowCcPerMin { get; set; } = 240f;
+    // Currently installed tires: 195/50 R15.
+    public static TireConfiguration CurrentTires = new TireConfiguration
+    {
+        Make = "",
+        Model = "",
+        WidthMm = 195,
+        AspectRatio = 50,
+        WheelDiameterInches = 15f,
+        LoadIndex = 0,
+        SpeedRating = "",
+        RollingCircumferenceMm = 0f
+    };
+}
+
+/// <summary>One tire specification, currently assumed identical on all four wheels.</summary>
+public class TireConfiguration
+{
+    public string Make = "";
+    public string Model = "";
+    public int WidthMm;
+    public int AspectRatio;
+    public float WheelDiameterInches;
+    public int LoadIndex;
+    public string SpeedRating = "";
+
+    /// <summary>Optional measured rolling circumference; zero uses nominal geometry.</summary>
+    public float RollingCircumferenceMm;
+
+    public float SidewallHeightMm =>
+        WidthMm > 0 && AspectRatio > 0 ? WidthMm * (AspectRatio / 100f) : 0f;
+
+    public float NominalDiameterMm =>
+        WheelDiameterInches > 0f
+            ? WheelDiameterInches * 25.4f + 2f * SidewallHeightMm
+            : 0f;
+
+    public float NominalCircumferenceMm =>
+        NominalDiameterMm > 0f ? NominalDiameterMm * (float)Math.PI : 0f;
+
+    public float EffectiveCircumferenceMm =>
+        RollingCircumferenceMm > 0f ? RollingCircumferenceMm : NominalCircumferenceMm;
 }

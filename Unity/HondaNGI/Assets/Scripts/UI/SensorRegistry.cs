@@ -86,7 +86,7 @@ public static class SensorRegistry
             max: 9000f,
             decimals: 0,
             valueGetter: () => VehicleData.Rpm,
-            "engine", "speed", "rotation"));
+            "engine", "rpm", "rotational-speed", "rotation"));
 
         Register(new SensorDefinition(
             id: "engine.coolant_temperature",
@@ -280,7 +280,19 @@ public static class SensorRegistry
             max: 80f,
             decimals: 1,
             valueGetter: () => VehicleData.Speed,
-            "drivetrain", "speed", "vehicle"));
+            "drivetrain", "vehicle-speed", "linear-speed", "vehicle"));
+
+        Register(new SensorDefinition(
+            id: "drivetrain.adjusted_speed",
+            name: "Adjusted Vehicle Speed",
+            shortName: "ADJ",
+            unit: "m/s",
+            kind: SensorKind.Continuous,
+            min: 0f,
+            max: 80f,
+            decimals: 1,
+            valueGetter: () => VehicleCalculations.AdjustedSpeed,
+            "drivetrain", "vehicle-speed", "linear-speed", "adjusted", "tires"));
 
         Register(new SensorDefinition(
             id: "drivetrain.odometer",

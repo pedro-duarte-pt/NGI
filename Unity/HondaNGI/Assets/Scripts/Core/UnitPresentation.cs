@@ -16,9 +16,9 @@ public static class UnitPresentation
                 ? canonicalValue * 9f / 5f + 32f
                 : canonicalValue;
 
-        if (sensor.Id.Equals("drivetrain.vehicle_speed", StringComparison.OrdinalIgnoreCase))
+        if (IsVehicleSpeed(sensor))
         {
-            // Canonical VehicleData speed is m/s.
+            // Canonical vehicle speed values are m/s.
             return UserPreferences.Speed == SpeedUnit.MilesPerHour
                 ? canonicalValue * 2.23693629f
                 : canonicalValue * 3.6f;
@@ -78,7 +78,7 @@ public static class UnitPresentation
         if (IsTemperature(sensor))
             return UserPreferences.Temperature == TemperatureUnit.Fahrenheit ? "°F" : "°C";
 
-        if (sensor.Id.Equals("drivetrain.vehicle_speed", StringComparison.OrdinalIgnoreCase))
+        if (IsVehicleSpeed(sensor))
             return UserPreferences.Speed == SpeedUnit.MilesPerHour ? "mph" : "km/h";
 
         if (sensor.Id.Equals("drivetrain.odometer", StringComparison.OrdinalIgnoreCase))
@@ -106,6 +106,9 @@ public static class UnitPresentation
 
         return sensor.Unit;
     }
+
+    private static bool IsVehicleSpeed(SensorDefinition sensor) =>
+        HasTag(sensor, "vehicle-speed");
 
     private static bool IsTemperature(SensorDefinition sensor) =>
         sensor.Unit == "°C" || HasTag(sensor, "temperature");

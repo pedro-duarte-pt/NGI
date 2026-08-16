@@ -118,7 +118,7 @@
         "height": 1
       },
       "props": {
-        "sensor": "drivetrain.vehicle_speed",
+        "sensor": "drivetrain.adjusted_speed",
         "traceColor": "#8D3CFF"
       }
     },

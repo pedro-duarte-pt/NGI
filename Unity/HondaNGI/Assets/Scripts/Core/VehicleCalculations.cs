@@ -1,15 +1,48 @@
 /// <summary>
 /// Derived vehicle values calculated from VehicleData and VehicleConfiguration.
-///
-/// Fuel calculations currently use nominal injector flow. Fuel-pressure/MAP
-/// correction can be added here later when reliable live/configured inputs exist.
 /// </summary>
 public static class VehicleCalculations
 {
     /// <summary>
-    /// Injector duty cycle in percent for a four-stroke engine.
-    /// VehicleData.Injectors is injector pulse width in milliseconds.
+    /// Speed enhanced using current tire circumference relative to the OEM tire reference.
+    /// Canonical unit remains metres per second, matching VehicleData.Speed.
+    /// Falls back to the ECU/VSS speed if tire configuration is invalid.
     /// </summary>
+    public static float AdjustedSpeed
+    {
+        get
+        {
+            float referenceCircumference =
+                VehicleConfiguration.OemTires.NominalCircumferenceMm;
+
+            float currentCircumference =
+                VehicleConfiguration.CurrentTires.EffectiveCircumferenceMm;
+
+            if (referenceCircumference <= 0f || currentCircumference <= 0f)
+                return VehicleData.Speed;
+
+            return VehicleData.Speed *
+                   currentCircumference /
+                   referenceCircumference;
+        }
+    }
+
+    public static float TireSpeedAdjustmentFactor
+    {
+        get
+        {
+            float referenceCircumference =
+                VehicleConfiguration.OemTires.NominalCircumferenceMm;
+            float currentCircumference =
+                VehicleConfiguration.CurrentTires.EffectiveCircumferenceMm;
+
+            if (referenceCircumference <= 0f || currentCircumference <= 0f)
+                return 1f;
+
+            return currentCircumference / referenceCircumference;
+        }
+    }
+
     public static float InjectorDutyCycle
     {
         get
@@ -21,7 +54,6 @@ public static class VehicleCalculations
         }
     }
 
-    /// <summary>Instantaneous nominal fuel flow in litres per hour.</summary>
     public static float FuelRateLitresPerHour
     {
         get
@@ -30,9 +62,7 @@ public static class VehicleCalculations
                 VehicleData.Injectors <= 0f ||
                 VehicleConfiguration.InjectorCount <= 0 ||
                 VehicleConfiguration.InjectorFlowCcPerMin <= 0f)
-            {
                 return 0f;
-            }
 
             return VehicleData.Rpm
                  * VehicleData.Injectors
@@ -43,14 +73,13 @@ public static class VehicleCalculations
     }
 
     /// <summary>
-    /// Instantaneous fuel consumption in litres per 100 km.
-    /// Returns zero while stationary; presentation logic will select L/h at low speed.
+    /// Instantaneous fuel consumption in litres per 100 km using AdjustedSpeed.
     /// </summary>
     public static float FuelConsumptionLitresPer100Km
     {
         get
         {
-            float speedKmh = VehicleData.Speed * 3.6f;
+            float speedKmh = AdjustedSpeed * 3.6f;
 
             if (speedKmh <= 0f)
                 return 0f;
