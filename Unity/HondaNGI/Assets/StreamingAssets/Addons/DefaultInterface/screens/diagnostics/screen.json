@@ -4,7 +4,7 @@
   "style": "styles.json",
   "layout": {
     "type": "grid",
-    "columns": 10,
+    "columns": 12,
     "rows": 9,
     "gap": 12,
     "padding": 0
@@ -17,7 +17,7 @@
       "layout": {
         "x": 0,
         "y": 0,
-        "width": 10,
+        "width": 12,
         "height": 1
       },
       "children": [
@@ -59,7 +59,7 @@
       "type": "conditionalImage",
       "id": "mil-indicator",
       "layout": {
-        "x": 9,
+        "x": 10,
         "y": 0,
         "width": 1,
         "height": 1
@@ -79,6 +79,21 @@
           "asset": "assets/MIL_OFF.png"
         },
         "scaleMode": "fit"
+      }
+    },
+    {
+      "type": "actionButton",
+      "id": "settings-button",
+      "layout": {
+        "x": 11,
+        "y": 0,
+        "width": 1,
+        "height": 1
+      },
+      "props": {
+        "text": "SETTINGS",
+        "action": "navigate",
+        "screen": "preferences"
       }
     },
     {
@@ -291,7 +306,7 @@
       "layout": {
         "x": 2,
         "y": 1,
-        "width": 8,
+        "width": 10,
         "height": 8
       },
       "props": {

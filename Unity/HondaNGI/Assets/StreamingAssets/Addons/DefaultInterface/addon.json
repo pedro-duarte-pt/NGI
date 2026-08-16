@@ -10,6 +10,10 @@
     {
       "id": "diagnostics",
       "path": "screens/diagnostics"
+    },
+    {
+      "id": "preferences",
+      "path": "screens/preferences"
     }
   ]
 }

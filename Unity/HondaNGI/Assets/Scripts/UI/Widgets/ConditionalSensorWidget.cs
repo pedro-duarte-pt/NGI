@@ -125,8 +125,8 @@ public sealed class ConditionalSensorWidget : IRuntimeWidget
             }
             else
             {
-                valueLabel.text = activeSensor.Value.ToString("F" + activeSensor.Decimals, CultureInfo.InvariantCulture);
-                unitLabel.text = activeSensor.Unit;
+                valueLabel.text = UnitPresentation.Value(activeSensor, activeSensor.Value).ToString("F" + activeSensor.Decimals, CultureInfo.InvariantCulture);
+                unitLabel.text = UnitPresentation.Unit(activeSensor);
             }
         }
         else if (result != null)

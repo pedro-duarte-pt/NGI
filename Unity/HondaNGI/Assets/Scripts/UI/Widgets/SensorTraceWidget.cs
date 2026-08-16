@@ -130,7 +130,7 @@ public sealed class SensorTraceWidget : IRuntimeWidget
             trace.Samples.Add(new Sample
             {
                 Time = now,
-                Value = trace.Sensor.Value
+                Value = UnitPresentation.Value(trace.Sensor, trace.Sensor.Value)
             });
 
             float oldest = now - windowSeconds;
@@ -270,9 +270,9 @@ private void UpdateWindowButtons()
 
             var text = new Label(
                 sensor.ShortName +
-                (string.IsNullOrWhiteSpace(sensor.Unit)
+                (string.IsNullOrWhiteSpace(UnitPresentation.Unit(sensor))
                     ? ""
-                    : " (" + sensor.Unit + ")")
+                    : " (" + UnitPresentation.Unit(sensor) + ")")
             );
 
             text.AddToClassList("sensor-trace-legend-text");
@@ -460,8 +460,8 @@ private void UpdateWindowButtons()
         float innerTop,
         float innerBottom)
     {
-        float min = trace.Sensor.Min;
-        float max = trace.Sensor.Max;
+        float min = UnitPresentation.Min(trace.Sensor);
+        float max = UnitPresentation.Max(trace.Sensor);
 
         if (Mathf.Approximately(min, max))
             max = min + 1f;
@@ -578,7 +578,9 @@ private void UpdateWindowButtons()
             for (int i = 0; i <= yDivisions; i++)
             {
                 float value01 = (float)i / yDivisions;
-                float value = Mathf.Lerp(sensor.Min, sensor.Max, value01);
+                float displayMin = UnitPresentation.Min(sensor);
+                float displayMax = UnitPresentation.Max(sensor);
+                float value = Mathf.Lerp(displayMin, displayMax, value01);
                 float y = Mathf.Lerp(innerBottom, innerTop, value01);
 
                 var label = new Label(FormatAxisValue(sensor, value));

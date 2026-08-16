@@ -1,0 +1,95 @@
+{
+  "tokens": [
+    {
+      "name": "background",
+      "value": "#060708"
+    },
+    {
+      "name": "surface",
+      "value": "#090B0D"
+    },
+    {
+      "name": "textPrimary",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "accent",
+      "value": "#E01919"
+    },
+    {
+      "name": "border",
+      "value": "#3A3E42"
+    }
+  ],
+  "styles": [
+    {
+      "name": "screen-root",
+      "style": {
+        "backgroundColor": "$background"
+      }
+    },
+    {
+      "name": "preferences-title",
+      "style": {
+        "color": "$textPrimary",
+        "fontSize": {
+          "set": true,
+          "value": 24
+        },
+        "fontWeight": "bold",
+        "paddingLeft": {
+          "set": true,
+          "value": 12
+        },
+        "alignItems": "center"
+      }
+    },
+    {
+      "name": "preference-selector",
+      "style": {
+        "backgroundColor": "$surface",
+        "borderColor": "$border",
+        "borderWidth": {
+          "set": true,
+          "value": 1
+        },
+        "paddingLeft": {
+          "set": true,
+          "value": 12
+        },
+        "paddingRight": {
+          "set": true,
+          "value": 12
+        },
+        "paddingTop": {
+          "set": true,
+          "value": 10
+        },
+        "paddingBottom": {
+          "set": true,
+          "value": 10
+        }
+      }
+    },
+    {
+      "name": "preference-label",
+      "style": {
+        "color": "$textPrimary",
+        "fontWeight": "bold"
+      }
+    },
+    {
+      "name": "action-button",
+      "style": {
+        "backgroundColor": "$surface",
+        "color": "$textPrimary",
+        "borderColor": "$accent",
+        "borderWidth": {
+          "set": true,
+          "value": 1
+        },
+        "fontWeight": "bold"
+      }
+    }
+  ]
+}

@@ -30,6 +30,7 @@ public class ScreenLoader : MonoBehaviour
         }
 
         documentRoot = uiDocument.rootVisualElement;
+        ScreenNavigation.Initialize(this);
     }
 
     private void Update()
@@ -45,29 +46,34 @@ public class ScreenLoader : MonoBehaviour
 
     public void LoadAddonScreen(string addonId, string screenId)
     {
+        TryLoadAddonScreen(addonId, screenId);
+    }
+
+    public bool TryLoadAddonScreen(string addonId, string screenId)
+    {
         if (!AddonRegistry.TryGetScreen(
                 addonId, screenId,
                 out LoadedAddon addon,
                 out AddonScreenEntry entry))
         {
             Debug.LogError("Addon screen not found: " + addonId + " / " + screenId);
-            return;
+            return false;
         }
 
         if (string.IsNullOrWhiteSpace(entry.path))
         {
             Debug.LogError("Screen path is empty for: " + addonId + " / " + screenId);
-            return;
+            return false;
         }
 
-        LoadScreenFromFolder(
+        return LoadScreenFromFolder(
             addonId,
             screenId,
             addon.RootPath,
             Path.Combine(addon.RootPath, entry.path));
     }
 
-    private void LoadScreenFromFolder(
+    private bool LoadScreenFromFolder(
         string addonId,
         string screenId,
         string addonRoot,
@@ -78,7 +84,7 @@ public class ScreenLoader : MonoBehaviour
         if (!File.Exists(screenPath))
         {
             Debug.LogError("Screen file not found: " + screenPath);
-            return;
+            return false;
         }
 
         try
@@ -91,13 +97,13 @@ public class ScreenLoader : MonoBehaviour
             Debug.LogError(
                 "Invalid screen definition: " +
                 screenPath + " | " + ex.Message);
-            return;
+            return false;
         }
 
         if (CurrentScreen == null || CurrentScreen.Widgets == null)
         {
             Debug.LogError("Invalid screen definition: " + screenPath);
-            return;
+            return false;
         }
 
         string stylePath =
@@ -109,11 +115,14 @@ public class ScreenLoader : MonoBehaviour
             Debug.LogWarning("Screen will continue without external styles.");
 
         BuildScreen(addonId, addonRoot);
+        ScreenNavigation.NotifyLoaded(addonId, screenId);
 
         Debug.Log(
             "[SCREEN OK] " + addonId + " / " + screenId +
             " -> " + CurrentScreen.Title +
             " (" + CurrentScreen.Widgets.Count + " widgets)");
+
+        return true;
     }
 
     private void BuildScreen(string addonId, string addonRoot)
