@@ -6,5 +6,6 @@ public static class WidgetFactory {
  case"text":return new TextWidget(d.PropString("text"));
  case"sensorTrace":return new SensorTraceWidget(d,c?.Styles);
  case"conditionalSensor":return new ConditionalSensorWidget(d,c?.Styles);
+ case"conditionalImage":return new ConditionalImageWidget(d,c);
  case"image":return new ImageWidget(d,c);
  default:Debug.LogWarning("Unsupported widget type: "+d.Type);return null;}}}

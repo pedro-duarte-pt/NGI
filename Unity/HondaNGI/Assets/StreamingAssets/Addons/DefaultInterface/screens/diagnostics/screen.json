@@ -56,6 +56,32 @@
       ]
     },
     {
+      "type": "conditionalImage",
+      "id": "mil-indicator",
+      "layout": {
+        "x": 9,
+        "y": 0,
+        "width": 1,
+        "height": 1
+      },
+      "props": {
+        "cases": [
+          {
+            "when": {
+              "sensor": "diagnostics.mil",
+              "operator": "==",
+              "value": 1
+            },
+            "asset": "assets/MIL_ON.png"
+          }
+        ],
+        "default": {
+          "asset": "assets/MIL_OFF.png"
+        },
+        "scaleMode": "fit"
+      }
+    },
+    {
       "type": "sensor",
       "layout": {
         "x": 0,
@@ -129,7 +155,7 @@
         "height": 1
       },
       "props": {
-        "sensor": "diagnostics.mil",
+        "sensor": "engine.injector.pulse_width",
         "traceColor": "#B24DFF"
       }
     },
