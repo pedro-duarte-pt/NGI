@@ -149,7 +149,8 @@
       }
     },
     {
-      "type": "sensor",
+      "type": "conditionalSensor",
+      "id": "narrowband-o2",
       "layout": {
         "x": 0,
         "y": 3,
@@ -157,8 +158,30 @@
         "height": 1
       },
       "props": {
-        "sensor": "exhaust.oxygen.narrowband",
-        "traceColor": "#20AEB1"
+        "label": "O2",
+        "traceColor": "#20AEB1",
+        "cases": [
+          {
+            "when": {
+              "sensor": "exhaust.oxygen.narrowband",
+              "operator": ">",
+              "value": 0.5
+            },
+            "sensor": "exhaust.oxygen.narrowband"
+          },
+          {
+            "when": {
+              "sensor": "exhaust.oxygen.narrowband",
+              "operator": ">=",
+              "value": 0.4
+            },
+            "sensor": "exhaust.oxygen.narrowband",
+            "backgroundColor": "#1F7A3A"
+          }
+        ],
+        "default": {
+          "sensor": "exhaust.oxygen.narrowband"
+        }
       }
     },
     {

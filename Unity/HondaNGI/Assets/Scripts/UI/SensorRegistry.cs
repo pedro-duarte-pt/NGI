@@ -256,15 +256,15 @@ public static class SensorRegistry
 
         Register(new SensorDefinition(
             id: "exhaust.oxygen.narrowband",
-            name: "Narrowband Oxygen",
+            name: "Narrowband Oxygen Voltage",
             shortName: "O2",
-            unit: "",
+            unit: "V",
             kind: SensorKind.Continuous,
             min: 0f,
-            max: 20f,
+            max: 1f,
             decimals: 2,
             valueGetter: () => VehicleData.O2nb,
-            "exhaust", "oxygen", "mixture"));
+            "exhaust", "oxygen", "narrowband", "voltage"));
 
         // -----------------------------------------------------------------
         // DRIVETRAIN
@@ -285,7 +285,7 @@ public static class SensorRegistry
         Register(new SensorDefinition(
             id: "drivetrain.adjusted_speed",
             name: "Adjusted Vehicle Speed",
-            shortName: "ADJ",
+            shortName: "SPEED",
             unit: "m/s",
             kind: SensorKind.Continuous,
             min: 0f,

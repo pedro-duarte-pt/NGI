@@ -1,7 +1,9 @@
+using NGI.Utilities;
+
 /// <summary>
 /// Global realtime vehicle state.
 ///
-/// DataLogging writes decoded/normalized values here.
+/// DataLogging writes raw/unpacked ECU values here; setters convert them to canonical values through Utils.
 /// SensorRegistry exposes them through stable hierarchical sensor IDs.
 ///
 /// This is intentionally a plain static data class:
@@ -45,14 +47,14 @@ public static class VehicleData
     public static float IAT
     {
         get => ECU_IAT_val;
-        set => ECU_IAT_val = value;
+        set => ECU_IAT_val = Utils.EcuTemperatureRawToCelsius(value);
     }
 
     /// <summary>Idle air control command/position in percent.</summary>
     public static float IAC
     {
         get => ECU_IAC_val;
-        set => ECU_IAC_val = value;
+        set => ECU_IAC_val = Utils.EcuPercentRawToPercent(value);
     }
 
     /// <summary>A/C compressor request/control flag from ECU P0.</summary>
@@ -115,40 +117,40 @@ public static class VehicleData
     public static float ECT
     {
         get => ECU_ECT_val;
-        set => ECU_ECT_val = value;
+        set => ECU_ECT_val = Utils.EcuTemperatureRawToCelsius(value);
     }
 
     /// <summary>
     /// Vehicle speed.
-    /// Input from DataLogging is expected in km/h; stored internally in m/s.
+    /// Raw TPDO speed is expressed in km/h; stored internally in m/s.
     /// </summary>
     public static float Speed
     {
         get => ECU_speed_val;
-        set => ECU_speed_val = value / 3.6f;
+        set => ECU_speed_val = Utils.EcuSpeedKphToMetersPerSecond(value);
     }
 
     /// <summary>
-    /// Current battery sense value as supplied by the current decoder.
+    /// Vehicle battery voltage in volts.
     /// </summary>
     public static float Battery
     {
         get => ECU_battery_val;
-        set => ECU_battery_val = value;
+        set => ECU_battery_val = Utils.EcuBatteryRawToVolts(value);
     }
 
     /// <summary>Permanent vehicle odometer in kilometres.</summary>
     public static double Odometer
     {
         get => ECU_odometer_val;
-        set => ECU_odometer_val = value;
+        set => ECU_odometer_val = Utils.OdometerX100mToKilometers(value);
     }
 
     /// <summary>Engine speed in rpm.</summary>
     public static float Rpm
     {
         get => ECU_rpm_val;
-        set => ECU_rpm_val = value;
+        set => ECU_rpm_val = Utils.EcuRpmRawToRpm(value);
     }
 
     /// <summary>
@@ -183,32 +185,31 @@ public static class VehicleData
 
     /// <summary>
     /// Injector pulse width in milliseconds.
-    /// Preserves the existing conversion from the decoded raw value.
+    /// Converted from the raw ECU injector timer value.
     /// </summary>
     public static float Injectors
     {
         get => ECU_inj_val;
-        set => ECU_inj_val = value * 3.20000004768372f / 1000.0f;
+        set => ECU_inj_val = Utils.EcuInjectorRawToMilliseconds(value);
     }
 
     /// <summary>
-    /// Narrowband oxygen value.
-    /// Preserves the existing project conversion.
+    /// Narrowband oxygen sensor voltage in volts.
     /// </summary>
     public static float O2nb
     {
         get => ECU_02nb_val;
-        set => ECU_02nb_val = (float)System.Math.Round(value, 2) * 2f + 10f;
+        set => ECU_02nb_val = Utils.EcuO2RawToVolts(value);
     }
 
     /// <summary>
     /// Throttle position in percent.
-    /// Preserves the existing project conversion.
+    /// Converted from the raw ECU throttle value.
     /// </summary>
     public static float Tps
     {
         get => ECU_tps_val;
-        set => ECU_tps_val = (float)System.Math.Round(value * 0.472637 - 11.46119);
+        set => ECU_tps_val = Utils.EcuThrottleRawToPercent(value);
     }
 
     /// <summary>Selected gear.</summary>

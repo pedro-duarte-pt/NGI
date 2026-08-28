@@ -23,6 +23,7 @@ public sealed class ConditionalSensorWidget : IRuntimeWidget
         public SensorDefinition Sensor;
         public string Message;
         public string Unit;
+        public string BackgroundColor;
     }
 
     private sealed class Case
@@ -141,6 +142,7 @@ public sealed class ConditionalSensorWidget : IRuntimeWidget
         }
 
         UpdateSelectionAppearance();
+        ApplyResultBackground(result);
     }
 
     private Result SelectResult()
@@ -222,7 +224,11 @@ public sealed class ConditionalSensorWidget : IRuntimeWidget
         {
             SensorDefinition sensor = SensorRegistry.Get(sensorId);
             if (sensor != null)
-                return new Result { Sensor = sensor };
+                return new Result
+                {
+                    Sensor = sensor,
+                    BackgroundColor = AddonJson.Str(obj, "backgroundColor")
+                };
         }
 
         if (obj.TryGetValue("message", out object rawMessage))
@@ -230,11 +236,23 @@ public sealed class ConditionalSensorWidget : IRuntimeWidget
             return new Result
             {
                 Message = Convert.ToString(rawMessage, CultureInfo.InvariantCulture),
-                Unit = AddonJson.Str(obj, "unit")
+                Unit = AddonJson.Str(obj, "unit"),
+                BackgroundColor = AddonJson.Str(obj, "backgroundColor")
             };
         }
 
         return null;
+    }
+
+    private void ApplyResultBackground(Result result)
+    {
+        string htmlColor = result?.BackgroundColor;
+
+        if (!string.IsNullOrWhiteSpace(htmlColor) &&
+            ColorUtility.TryParseHtmlString(htmlColor, out Color color))
+            root.style.backgroundColor = color;
+        else
+            root.style.backgroundColor = StyleKeyword.Null;
     }
 
     private void UpdateSelectionAppearance()

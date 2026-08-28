@@ -36,7 +36,7 @@ namespace NGI.Utilities
                     break;
                 case UnitType.Fahrenheit: // from Celsius
                     converted = (val * 9f / 5f) + 32f;
-                    unit = " ºF";
+                    unit = " ÂºF";
                     break;
                 case UnitType.Miles: // from meters
                     converted = val / 1609.34f;
@@ -48,7 +48,7 @@ namespace NGI.Utilities
                     break;
                 case UnitType.Celsius:
                     converted = val;
-                    unit = " °C";
+                    unit = " Â°C";
                     break;
                 case UnitType.Kilometers: // from meters
                     converted = val / 1000f;
@@ -72,5 +72,67 @@ namespace NGI.Utilities
 
             return converted.ToString("0.##") + unit;
         }
+
+
+        // ECU raw-value conversions. DataLogging only transports/unpacks raw values;
+        // VehicleData calls these helpers to expose meaningful canonical values.
+
+        public static float EcuSpeedKphToMetersPerSecond(float speedKph)
+        {
+            return speedKph / 3.6f;
+        }
+
+        public static float EcuRpmRawToRpm(float rpmRaw)
+        {
+            return rpmRaw > 0f ? 1875000f / rpmRaw : 0f;
+        }
+
+        public static float EcuInjectorRawToMilliseconds(float injectorRaw)
+        {
+            return injectorRaw * 3.20000004768372f / 1000.0f;
+        }
+
+        public static float EcuO2RawToVolts(float o2Raw)
+        {
+            return o2Raw / 51.0f;
+        }
+
+        public static float EcuBatteryRawToVolts(float batteryRaw)
+        {
+            return (26.0f * batteryRaw) / 270.0f;
+        }
+
+        public static float EcuPercentRawToPercent(float raw)
+        {
+            return (raw / 255f) * 100f;
+        }
+
+        public static float EcuThrottleRawToPercent(float tpsRaw)
+        {
+            return (float)System.Math.Round(tpsRaw * 0.472637 - 11.46119);
+        }
+
+        public static float EcuTemperatureRawToCelsius(float temperatureRaw)
+        {
+            double value = temperatureRaw / 51.0;
+
+            value =
+                (0.1423 * System.Math.Pow(value, 6)) -
+                (2.4938 * System.Math.Pow(value, 5)) +
+                (17.837 * System.Math.Pow(value, 4)) -
+                (68.698 * System.Math.Pow(value, 3)) +
+                (154.69 * System.Math.Pow(value, 2)) -
+                (232.75 * value) +
+                284.24;
+
+            value = ((value - 32.0) * 5.0) / 9.0;
+            return (float)value;
+        }
+
+        public static double OdometerX100mToKilometers(double odometerX100m)
+        {
+            return odometerX100m / 10.0;
+        }
+
     }
 }
