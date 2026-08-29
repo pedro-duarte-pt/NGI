@@ -5,7 +5,7 @@
   "layout": {
     "type": "grid",
     "columns": 12,
-    "rows": 9,
+    "rows": 13,
     "gap": 12,
     "padding": 0
   },
@@ -149,8 +149,7 @@
       }
     },
     {
-      "type": "conditionalSensor",
-      "id": "narrowband-o2",
+      "type": "sensor",
       "layout": {
         "x": 0,
         "y": 3,
@@ -158,30 +157,8 @@
         "height": 1
       },
       "props": {
-        "label": "O2",
-        "traceColor": "#20AEB1",
-        "cases": [
-          {
-            "when": {
-              "sensor": "exhaust.oxygen.narrowband",
-              "operator": ">",
-              "value": 0.5
-            },
-            "sensor": "exhaust.oxygen.narrowband"
-          },
-          {
-            "when": {
-              "sensor": "exhaust.oxygen.narrowband",
-              "operator": ">=",
-              "value": 0.4
-            },
-            "sensor": "exhaust.oxygen.narrowband",
-            "backgroundColor": "#1F7A3A"
-          }
-        ],
-        "default": {
-          "sensor": "exhaust.oxygen.narrowband"
-        }
+        "sensor": "exhaust.oxygen.narrowband",
+        "traceColor": "#20AEB1"
       }
     },
     {
@@ -224,7 +201,8 @@
       }
     },
     {
-      "type": "sensor",
+      "type": "binaryIndicator",
+      "id": "fan-indicator",
       "layout": {
         "x": 0,
         "y": 5,
@@ -233,7 +211,9 @@
       },
       "props": {
         "sensor": "engine.cooling.fan",
-        "traceColor": "#39B93B"
+        "label": "FAN",
+        "onAsset": "assets/STATUS_ON.png",
+        "offAsset": "assets/STATUS_OFF.png"
       }
     },
     {
@@ -250,7 +230,8 @@
       }
     },
     {
-      "type": "sensor",
+      "type": "binaryIndicator",
+      "id": "vtec1-indicator",
       "layout": {
         "x": 0,
         "y": 6,
@@ -259,11 +240,14 @@
       },
       "props": {
         "sensor": "engine.vtec.left",
-        "traceColor": "#E8D500"
+        "label": "VTEC1",
+        "onAsset": "assets/STATUS_ON.png",
+        "offAsset": "assets/STATUS_OFF.png"
       }
     },
     {
-      "type": "sensor",
+      "type": "binaryIndicator",
+      "id": "vtec2-indicator",
       "layout": {
         "x": 1,
         "y": 6,
@@ -272,16 +256,32 @@
       },
       "props": {
         "sensor": "engine.vtec.right",
-        "traceColor": "#E8D500"
+        "label": "VTEC2",
+        "onAsset": "assets/STATUS_ON.png",
+        "offAsset": "assets/STATUS_OFF.png"
+      }
+    },
+    {
+      "type": "sensor",
+      "id": "selected-gear",
+      "layout": {
+        "x": 0,
+        "y": 7,
+        "width": 1,
+        "height": 1
+      },
+      "props": {
+        "sensor": "drivetrain.transmission.gear",
+        "traceColor": "#FFFFFF"
       }
     },
     {
       "type": "sensor",
       "id": "vehicle-odometer",
       "layout": {
-        "x": 0,
+        "x": 1,
         "y": 7,
-        "width": 2,
+        "width": 1,
         "height": 1
       },
       "props": {
@@ -350,6 +350,118 @@
           15,
           60
         ]
+      }
+    },
+    {
+      "type": "binaryIndicator",
+      "id": "acc-indicator",
+      "layout": {
+        "x": 0,
+        "y": 9,
+        "width": 1,
+        "height": 1
+      },
+      "props": {
+        "sensor": "electrical.accessory.acc",
+        "label": "ACC",
+        "onAsset": "assets/STATUS_ON.png",
+        "offAsset": "assets/STATUS_OFF.png"
+      }
+    },
+    {
+      "type": "binaryIndicator",
+      "id": "pcs-indicator",
+      "layout": {
+        "x": 1,
+        "y": 9,
+        "width": 1,
+        "height": 1
+      },
+      "props": {
+        "sensor": "engine.control.pcs",
+        "label": "PCS",
+        "onAsset": "assets/STATUS_ON.png",
+        "offAsset": "assets/STATUS_OFF.png"
+      }
+    },
+    {
+      "type": "binaryIndicator",
+      "id": "pwrsteer-indicator",
+      "layout": {
+        "x": 0,
+        "y": 10,
+        "width": 1,
+        "height": 1
+      },
+      "props": {
+        "sensor": "chassis.steering.power_assist",
+        "label": "PWRSTEER",
+        "onAsset": "assets/STATUS_ON.png",
+        "offAsset": "assets/STATUS_OFF.png"
+      }
+    },
+    {
+      "type": "binaryIndicator",
+      "id": "iab-indicator",
+      "layout": {
+        "x": 1,
+        "y": 10,
+        "width": 1,
+        "height": 1
+      },
+      "props": {
+        "sensor": "intake.air_bypass",
+        "label": "IAB",
+        "onAsset": "assets/STATUS_ON.png",
+        "offAsset": "assets/STATUS_OFF.png"
+      }
+    },
+    {
+      "type": "binaryIndicator",
+      "id": "flr-indicator",
+      "layout": {
+        "x": 0,
+        "y": 11,
+        "width": 1,
+        "height": 1
+      },
+      "props": {
+        "sensor": "engine.fuel.flr",
+        "label": "FLR",
+        "onAsset": "assets/STATUS_ON.png",
+        "offAsset": "assets/STATUS_OFF.png"
+      }
+    },
+    {
+      "type": "binaryIndicator",
+      "id": "brake-indicator",
+      "layout": {
+        "x": 1,
+        "y": 11,
+        "width": 1,
+        "height": 1
+      },
+      "props": {
+        "sensor": "chassis.brake.pedal",
+        "label": "BRAKE",
+        "onAsset": "assets/STATUS_ON.png",
+        "offAsset": "assets/STATUS_OFF.png"
+      }
+    },
+    {
+      "type": "binaryIndicator",
+      "id": "altc-indicator",
+      "layout": {
+        "x": 0,
+        "y": 12,
+        "width": 1,
+        "height": 1
+      },
+      "props": {
+        "sensor": "electrical.alternator.control",
+        "label": "ALTC",
+        "onAsset": "assets/STATUS_ON.png",
+        "offAsset": "assets/STATUS_OFF.png"
       }
     }
   ]

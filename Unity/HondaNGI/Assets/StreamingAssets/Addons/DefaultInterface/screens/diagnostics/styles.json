@@ -594,6 +594,21 @@
           "value": 2
         }
       }
+    },
+    {
+      "name": "binary-indicator-image",
+      "style": {
+        "alignItems": "center",
+        "justifyContent": "center",
+        "marginTop": {
+          "set": true,
+          "value": 4
+        },
+        "marginBottom": {
+          "set": true,
+          "value": 4
+        }
+      }
     }
   ]
 }
